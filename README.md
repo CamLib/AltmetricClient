@@ -4,7 +4,7 @@ Retrieves and parses information from https://www.altmetric.com.
 
 Produced for a piece of research into the impact of Open Research on public policy.
 
-##Pseudocode (for the minimal viable version)
+## Pseudocode (for the minimal viable version)
 
 1. Read in a set of DOIs [http://www.doi.org/](http://www.doi.org/) in a CSV
 2. For each DOI.
@@ -16,11 +16,11 @@ Produced for a piece of research into the impact of Open Research on public poli
 
 Use the issues list for ideas / requests for more features.
 
-##Branches
+## Branches
 
 To keep things simple, everything is being pushed to master until the first 'release'. Then once we're actually using the tool in anger, we'll branch to dev and then start adding new features to that.
 
-##Dependencies
+## Dependencies
 
 1. Tests are in [PyTest](https://docs.pytest.org/en/latest/).
 2. REST / JSON handled using [requests](http://docs.python-requests.org/en/master/).
