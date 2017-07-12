@@ -16,6 +16,20 @@ Produced for a piece of research into the impact of Open Research on public poli
 
 Use the issues list for ideas / requests for more features.
 
+## Configuration
+
+The AlmetricClient needs a configuration file called config.ini to be created in the root folder. It should contain the following information used to connect to Altmetric's API.
+
+    [api.altmetric.com]
+    APIBaseURI = http://api.altmetric.com
+    APIVersion = v1
+    APIBaseCommand = fetch
+    APIRequestedItemIdType = doi
+    APIKey = <<PUT YOUR ALTMETRIC KEY HERE>>
+
+
+(All fields correct at time of going to press... See [https://api.altmetric.com/](https://api.altmetric.com/) for further details.
+
 ## Branches
 
 To keep things simple, everything is being pushed to master until the first 'release'. Then once we're actually using the tool in anger, we'll branch to dev and then start adding new features to that.

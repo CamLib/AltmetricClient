@@ -1,5 +1,3 @@
-
-
 class Altmetric:
 
     def __init__(self):
