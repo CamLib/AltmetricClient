@@ -1,3 +1,7 @@
+# Ignore the config file as we never want to commit and push it
+
+config.ini
+
 # PyCharm project folders
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
