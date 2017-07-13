@@ -27,8 +27,9 @@ The AlmetricClient needs a configuration file called config.ini to be created in
     APIRequestedItemIdType = doi
     APIKey = <<PUT YOUR ALTMETRIC KEY HERE>>
 
+You need the http:// in the URL, but you don't need to put any forward slashes in the other values - the URLBuilder class does that for you.
 
-(All fields correct at time of going to press... See [https://api.altmetric.com/](https://api.altmetric.com/) for further details.
+(All fields correct at time of going to press... See [https://api.altmetric.com/](https://api.altmetric.com/) for further details).
 
 ## Branches
 
@@ -38,6 +39,6 @@ To keep things simple, everything is being pushed to master until the first 'rel
 
 1. Tests are in [PyTest](https://docs.pytest.org/en/latest/).
 2. REST / JSON handled using [requests](http://docs.python-requests.org/en/master/).
-3. And we'll probably use the built-in [Python Config Parser](https://docs.python.org/3/library/configparser.html) to keep our Altmetrics key secret!
+3. The built-in [Python Config Parser](https://docs.python.org/3/library/configparser.html), which we've used to keep our Altmetrics key secret! (Never push the config.ini - keep a reference to it in .gitignore...
 
 The code was written with PyCharm but we'll at least try to GitIgnore all the project management cruft. We also built this from the get-go with GitHub's default Python ignore file.
