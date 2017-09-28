@@ -2,6 +2,8 @@
 
 Retrieves and parses information from https://www.altmetric.com.
 
+This is still a work in progress and hasn't made a usable first release yet. But we've started to use the issues list for ideas / requests for more features etc.
+
 Produced for a piece of research into the impact of Open Research on public policy.
 
 ## Pseudocode (for the minimal viable version)
@@ -21,9 +23,7 @@ N.b.: Altmetric's terminology feels a bit twisted... Blog posts, documentation e
 
 The primary key we can use to bind all this data back together again when we analyse it will be the document DOI (which we use to retrieve the JSON in the first place).
 
-Then we'll use a data analysis / visualisation tool of some sort to load the lists back in and join them back together on the DOI. (Could do this with Qlik but fancy trying it with R / R Studio.
-
-Use the issues list for ideas / requests for more features.
+Then we'll use a data analysis / visualisation tool of some sort to load the lists back in and join them back together on the DOI. (Could do this with Qlik but fancy trying it with R / R Studio).
 
 ## Configuration
 
