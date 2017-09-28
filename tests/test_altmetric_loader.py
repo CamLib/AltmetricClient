@@ -19,6 +19,14 @@ class TestContextInformation:
 
         self.test_altmetric_loader = None
 
+    def test_altmetric_id_returned(self):
+
+        assert self.result.altmetric_id == '1270180'
+
+    def test_article_title(self):
+
+        assert self.result.article_title == 'Surveillance Intervals for Small Abdominal Aortic Aneurysms: A Meta-analysis'
+
     def test_journal_title_returned(self):
 
         assert self.result.journal_title == "JAMA: Journal of the American Medical Association"
@@ -26,3 +34,19 @@ class TestContextInformation:
     def test_altmetric_score_returned(self):
 
         assert self.result.altmetric_score == 8.75
+
+    def test_print_publication_date(self):
+
+        assert self.result.print_publication_date == '2013-02-27T00:00:00+00:00'
+
+    def test_first_seen_on_date(self):
+
+        assert self.result.first_seen_on_date == '2013-02-28T12:16:27+00:00'
+
+    def test_altmetric_jid(self):
+
+        assert self.result.altmetric_journal_id == '4f6fa4ee3cf058f610002c38'
+
+    def test_total_mentions(self):
+
+        assert self.result.total_mentions == 10
