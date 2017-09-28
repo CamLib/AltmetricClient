@@ -11,8 +11,17 @@ Produced for a piece of research into the impact of Open Research on public poli
     1. Call the Altmetric API
     2. Retrieve some JSON (Handle errors!)
     3. Write the JSON to a local object.
-    4. Write out the fields we need (tbd) to another CSV
+    4. Write out the fields we need into three lists:
+        1. The master list containing core Altmetric data such as citation info, counts and demographics.
+        2. A 'mentions' list.
+        3. An 'authors' list (which will have a composite key of doc DOI with author id of some sort - details to be sorted out as and when).
 3. End
+
+N.b.: Altmetric's terminology feels a bit twisted... Blog posts, documentation etc tend to speak of 'mentions', but the API calls them 'posts'. Hmmm...
+
+The primary key we can use to bind all this data back together again when we analyse it will be the document DOI (which we use to retrieve the JSON in the first place).
+
+Then we'll use a data analysis / visualisation tool of some sort to load the lists back in and join them back together on the DOI. (Could do this with Qlik but fancy trying it with R / R Studio.
 
 Use the issues list for ideas / requests for more features.
 
