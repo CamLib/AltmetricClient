@@ -50,3 +50,7 @@ class TestContextInformation:
     def test_total_mentions(self):
 
         assert self.result.total_mentions == 10
+
+    def test_authors(self):
+
+        assert self.result.authors == "Bown MJ; Sweeting MJ; Brown LC; Powell JT; Thompson SG"

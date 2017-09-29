@@ -10,6 +10,7 @@ class Altmetric:
         self.__total_mentions = None
         self.__print_publication_date = None
         self.__first_seen_on_date = None
+        self.__authors = None
 
     @property
     def altmetric_id(self):
@@ -74,4 +75,12 @@ class Altmetric:
     @first_seen_on_date.setter
     def first_seen_on_date(self, first_seen_on_date):
         self.__first_seen_on_date = first_seen_on_date
+
+    @property
+    def authors(self):
+        return self.__authors
+
+    @authors.setter
+    def authors(self, authors):
+        self.__authors = authors
 
