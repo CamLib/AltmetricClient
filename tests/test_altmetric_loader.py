@@ -14,7 +14,6 @@ class TestContextInformation:
         data = json.loads(test_json)
         self.result = self.test_altmetric_loader.parse_result(data)
 
-
     def teardown_method(self):
 
         self.test_altmetric_loader = None

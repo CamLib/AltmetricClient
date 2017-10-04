@@ -51,3 +51,17 @@ To keep things simple, everything is being pushed to master until the first 'rel
 3. The built-in [Python Config Parser](https://docs.python.org/3/library/configparser.html), which we've used to keep our Altmetrics key secret! (Never push the config.ini - keep a reference to it in .gitignore...
 
 The code was written with PyCharm but we'll at least try to GitIgnore all the project management cruft. We also built this from the get-go with GitHub's default Python ignore file.
+
+This has a couple of implications for testing (see below).
+
+## Testing
+
+The code is a little 'impure' in terms of testing, in that there are what some people might (probably correctly) call Integration Tests mashed in with Unit Tests.
+
+These are around things like loading lists of DOIs in from CSVs (there's a files_in directory in the codebase, with a test file in it), and actually exercising the real Altmetric API endpoint.
+
+The former example at least relies upon a local resource (i.e. a test CSV loaded in from the files-in directory)... These means related tests will fail in PyCharm unless the local 'working directory' for those tests has been set in the run config.
+
+See [https://www.jetbrains.com/help/pycharm/run-debug-configuration.html](https://www.jetbrains.com/help/pycharm/run-debug-configuration.html)...
+
+... examples of the latter kind (i.e. tests that exercise third party resources) have been added to a seperate directory (tests_integration), though, so it's easier to exclude them from test runs. Otherwise, just by testing the code over and over, we'd be rather rudely hitting Altmetric's endpoint all the time.
