@@ -21,12 +21,22 @@ class DOIInputFileLoader:
 
         doi_list = []
 
-        with open(self.input_file_path, 'r') as doi_input_csv:
+        try:
 
-            doi_input_reader = DictReader(doi_input_csv)
+            with open(self.input_file_path, 'r') as doi_input_csv:
 
-            for doi_row in doi_input_reader:
+                doi_input_reader = DictReader(doi_input_csv)
 
-                doi_list.append(doi_row['DOI'])
+                for doi_row in doi_input_reader:
+
+                    doi_list.append(doi_row['DOI'])
+
+        except FileNotFoundError:
+
+            print("Could not find the input file at the location: {0}".format(self.input_file_path))
+
+        except:
+
+            print("The input file was found OK, but something weird happened when loading it.")
 
         return doi_list
