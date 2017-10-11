@@ -1,6 +1,8 @@
 from altmetric_client.output_writer_csv.csv_writer_master import CSVWriterMaster
 from altmetric_client.altmetric import Altmetric
 from csv import DictReader
+import os
+
 
 class TestBareMinimumMasterOutput:
 
@@ -9,12 +11,25 @@ class TestBareMinimumMasterOutput:
         self._test_file_name = 'test_bare_minimum_master_file.csv'
         self._files_out_directory = '../files_out/'
 
+        # clean up the old test file in the setup
+
+        filepath = '{0}{1}'.format(self._files_out_directory, self._test_file_name)
+
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+
         self._test_altmetric = Altmetric()
         self._test_altmetric.altmetric_id = 1234
         self._test_altmetric.altmetric_score = 13
         self._test_altmetric.article_title = 'Test Article Title'
+        self._test_altmetric.journal_title = 'Test Journal Title'
+        self._test_altmetric.altmetric_journal_id = 'Test Altmetric Journal Id'
+        self._test_altmetric.total_mentions = 78
+        self._test_altmetric.print_publication_date = '2013-02-27T00:00:00+00:00'
+        self._test_altmetric.first_seen_on_date = '2014-03-15T00:00:00+00:00'
+        self._test_altmetric.authors = 'Test Author 1, Test Author 2'
 
-        self.test_csv_writer_master = CSVWriterMaster(self._test_file_name, self._files_out_directory)
+        self.test_csv_writer_master = CSVWriterMaster(self._test_file_name, self._files_out_directory, self._test_altmetric)
 
     def tear_down_method(self):
 
@@ -39,7 +54,6 @@ class TestBareMinimumMasterOutput:
 
     def test_file_created_with_header_containing_altmetric_id(self):
 
-        self.test_csv_writer_master.altmetric = self._test_altmetric
         self.test_csv_writer_master.write_master()
 
         with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
@@ -47,25 +61,106 @@ class TestBareMinimumMasterOutput:
             test_output_reader = DictReader(test_output_csv)
             assert test_output_reader.fieldnames[0] == 'altmetric_id'
 
-    # Test altmetric_id is added to brand new file
+    def test_altmetric_id_added_to_master(self):
 
-    # Test altmetric_score
+        self.test_csv_writer_master.write_master()
 
-    # Test article_title
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
 
-    # Test journal_title
+            test_output_reader = DictReader(test_output_csv)
 
-    # Test altmetric_journal_id
+            assert int(next(test_output_reader)['altmetric_id']) == 1234
 
-    # Test total_mentions
+    def test_altmetric_score_added_to_master(self):
 
-    # Test print_publication_date
+        self.test_csv_writer_master.write_master()
 
-    # Test first_seen_on_date
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
 
-    # Test authors
+            test_output_reader = DictReader(test_output_csv)
 
-    # Test existing file is appended to with a new set of data
+            assert int(next(test_output_reader)['altmetric_score']) == 13
+
+    def test_article_title_added_to_master(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['article_title'] == 'Test Article Title'
+
+    def test_journal_title_added_to_master(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['journal_title'] == 'Test Journal Title'
+
+    def test_altmetric_journal_id_added_to_master(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['altmetric_journal_id'] == 'Test Altmetric Journal Id'
+
+    def test_total_mentions_added_to_master(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert int(next(test_output_reader)['total_mentions']) == 78
+
+    def test_print_publication_date_added_to_master(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['print_publication_date'] == '2013-02-27T00:00:00+00:00'
+
+    def test_first_seen_on_date_added_to_master(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['first_seen_on_date'] == '2014-03-15T00:00:00+00:00'
+
+    def test_authors_added_to_master(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['authors'] == 'Test Author 1, Test Author 2'
+
+    def test_new_article_info_appended_to_existing_file(self):
+
+        # Write the first piece of data
+        self.test_csv_writer_master.write_master()
+        # Setup a second piece of data
+        second_altmetric = Altmetric()
+        second_altmetric.altmetric_id = 999
+        self.test_csv_writer_master.altmetric = second_altmetric
+        # Write the second piece
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+            # skip the first line to find the new piece of data
+            next(test_output_reader)
+
+            assert int(next(test_output_reader)['altmetric_id']) == 999
 
     # Test error thrown if file name not set
 
