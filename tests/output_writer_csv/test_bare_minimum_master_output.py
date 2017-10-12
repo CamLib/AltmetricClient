@@ -162,8 +162,26 @@ class TestBareMinimumMasterOutput:
 
             assert int(next(test_output_reader)['altmetric_id']) == 999
 
-    # Test error thrown if file name not set
+    def test_error_handled_if_filename_not_set(self, capfd):
 
-    # Test error thrown if directory not set
+        test_filenameless_csv_master_writer = CSVWriterMaster()
+        test_filenameless_csv_master_writer.write_master()
+        out, err = capfd.readouterr()
+        assert out == 'Could not write a master csv file because the filename was not set in the Master CSV Writer\n'
 
-    # Test error thrown if altmetric not set
+    def test_error_handled_if_directory_not_set(self, capfd):
+
+        test_directoryless_csv_master_writer = CSVWriterMaster()
+        test_directoryless_csv_master_writer.output_file_name = 'FileNameSet.csv'
+        test_directoryless_csv_master_writer.write_master()
+        out, err = capfd.readouterr()
+        assert out == 'Could not write a master csv file because the output directory was not set in the Master CSV Writer\n'
+
+    def test_error_handled_if_altmetric_not_set(self, capfd):
+
+        test_altmetricless_csv_master_writer = CSVWriterMaster()
+        test_altmetricless_csv_master_writer.output_file_name = 'FileNameSet.csv'
+        test_altmetricless_csv_master_writer.output_directory_name = 'DirectoryNameSet.csv'
+        test_altmetricless_csv_master_writer.write_master()
+        out, err = capfd.readouterr()
+        assert out == 'Could not write a master csv file because the Altmetric data was not set in the Master CSV Writer\n'
