@@ -42,7 +42,6 @@ class TestAlmetricRequest:
 
         self._test_altmetric_request = None
 
-
     def _load_config(self, config_data):
 
         '''Loads the API config in the same way as the client app in the root directory, only
