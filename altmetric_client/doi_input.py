@@ -1,3 +1,4 @@
+import sys
 from csv import DictReader
 
 class DOIInputFileLoader:
@@ -38,5 +39,6 @@ class DOIInputFileLoader:
         except:
 
             print("The input file was found OK, but something weird happened when loading it.")
+            print('The error was: '), sys.exc_info()[0]
 
         return doi_list

@@ -1,7 +1,16 @@
 import configparser
+import sys
 from altmetric_client.altmetric_api_config import AltmetricAPIConfig
+from altmetric_client.altmetric_client_facade import AltmetricClientFacade
 
 class AltmetricClient:
+
+    '''
+    
+    There is obviously no input error handling or anything yet - the whole process of getting user input could
+    be made a lot friendlier.
+    
+    '''
 
     def run(self):
 
@@ -19,13 +28,19 @@ class AltmetricClient:
         # Printouts added for 'by eye' testing.
         # We don't want to push the config file into GitHub, so Unit Testing can't happen
 
-        print("Base URI: {0}".format(api_config.api_base_uri))
-        print("API Version: {0}".format(api_config.api_version))
-        print("API Base command: {0}".format(api_config.api_base_command))
-        print("API Requested Item Id Type: {0}".format(api_config.api_requested_item_id_type))
-        print("API Key: {0}".format(api_config.api_key))
+        # print("Base URI: {0}".format(api_config.api_base_uri))
+        # print("API Version: {0}".format(api_config.api_version))
+        # print("API Base command: {0}".format(api_config.api_base_command))
+        # print("API Requested Item Id Type: {0}".format(api_config.api_requested_item_id_type))
+        # print("API Key: {0}".format(api_config.api_key))
 
-        # Now pass the config into the constructor of a AltmetricDataFetcher class
+        input_dir = input('Enter an input directory (with trailing slash):')
+        input_file = input('Enter the DOI list input file name:')
+        output_dir = input('Enter an output directory (with trailing slash):')
+        output_file = input('Enter the name of the output file:')
+
+        altmetric_facade = AltmetricClientFacade(api_config, input_dir, input_file, output_dir, output_file)
+        altmetric_facade.execute()
 
 
     def _load_config(self, config_data):
