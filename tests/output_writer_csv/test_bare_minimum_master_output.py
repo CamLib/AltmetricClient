@@ -19,6 +19,7 @@ class TestBareMinimumMasterOutput:
             os.remove(filepath)
 
         self._test_altmetric = Altmetric()
+        self._test_altmetric.doi = '10/test.doi'
         self._test_altmetric.altmetric_id = 1234
         self._test_altmetric.altmetric_score = 13
         self._test_altmetric.article_title = 'Test Article Title'
@@ -52,14 +53,22 @@ class TestBareMinimumMasterOutput:
         self.test_csv_writer_master.altmetric = test_altmetric
         assert self.test_csv_writer_master.altmetric.altmetric_id == 1234
 
-    def test_file_created_with_header_containing_altmetric_id(self):
+    def test_file_created_with_header_containing_doi(self):
 
         self.test_csv_writer_master.write_master()
 
         with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
 
             test_output_reader = DictReader(test_output_csv)
-            assert test_output_reader.fieldnames[0] == 'altmetric_id'
+            assert test_output_reader.fieldnames[0] == 'doi'
+
+    def test_doi_added_to_master(self):
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['doi'] == '10/test.doi'
 
     def test_altmetric_id_added_to_master(self):
 

@@ -2,6 +2,7 @@ class Altmetric:
 
     def __init__(self):
 
+        self.__doi = None
         self.__altmetric_id = None
         self.__altmetric_score = None
         self.__article_title = None
@@ -11,6 +12,14 @@ class Altmetric:
         self.__print_publication_date = None
         self.__first_seen_on_date = None
         self.__first_author = None
+
+    @property
+    def doi(self):
+        return self.__doi
+
+    @doi.setter
+    def doi(self, doi):
+        self.__doi = doi
 
     @property
     def altmetric_id(self):

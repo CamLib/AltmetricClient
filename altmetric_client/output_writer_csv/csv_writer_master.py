@@ -45,8 +45,9 @@ class CSVWriterMaster:
 
         write_mode = self._get_write_mode(output_file_path)
 
-        fieldnames = ['altmetric_id', 'altmetric_score', 'article_title', 'journal_title', 'altmetric_journal_id',
-                      'total_mentions', 'print_publication_date', 'first_seen_on_date', 'authors']
+        fieldnames = ['doi', 'altmetric_id', 'altmetric_score', 'article_title', 'journal_title',
+                      'altmetric_journal_id','total_mentions', 'print_publication_date', 'first_seen_on_date',
+                      'authors']
 
         try:
 
@@ -57,7 +58,8 @@ class CSVWriterMaster:
                 if write_mode == 'w':
                     output_writer.writeheader()
 
-                output_dict = dict(altmetric_id=self.altmetric.altmetric_id,
+                output_dict = dict(doi=self.altmetric.doi,
+                                   altmetric_id=self.altmetric.altmetric_id,
                                    altmetric_score=self.altmetric.altmetric_score,
                                    article_title=self.altmetric.article_title,
                                    journal_title=self.altmetric.journal_title,
