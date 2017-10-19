@@ -52,4 +52,4 @@ class TestContextInformation:
 
     def test_authors(self):
 
-        assert self.result.authors == "Bown MJ; Sweeting MJ; Brown LC; Powell JT; Thompson SG"
+        assert self.result.first_author == "Bown MJ"

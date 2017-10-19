@@ -27,7 +27,7 @@ class TestBareMinimumMasterOutput:
         self._test_altmetric.total_mentions = 78
         self._test_altmetric.print_publication_date = '2013-02-27T00:00:00+00:00'
         self._test_altmetric.first_seen_on_date = '2014-03-15T00:00:00+00:00'
-        self._test_altmetric.authors = 'Test Author 1, Test Author 2'
+        self._test_altmetric.first_author = 'Test Author 1, Test Author 2'
 
         self.test_csv_writer_master = CSVWriterMaster(self._test_file_name, self._files_out_directory, self._test_altmetric)
 

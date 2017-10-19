@@ -65,7 +65,7 @@ class CSVWriterMaster:
                                    total_mentions=self.altmetric.total_mentions,
                                    print_publication_date=self.altmetric.print_publication_date,
                                    first_seen_on_date=self.altmetric.first_seen_on_date,
-                                   authors=self.altmetric.authors)
+                                   authors=self.altmetric.first_author)
 
                 output_writer.writerow(output_dict)
 

@@ -25,7 +25,7 @@ class AltmetricLoader:
         result.total_mentions = data["counts"]["total"]["posts_count"]
         result.print_publication_date = data["citation"]["pubdate"]
         result.first_seen_on_date = data["citation"]["first_seen_on"]
-        result.authors = self.__parse_authors(data["citation"]["authors"])
+        result.first_author = data["citation"]["authors"][0]
 
 
         return result
