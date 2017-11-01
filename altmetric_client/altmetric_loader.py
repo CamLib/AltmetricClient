@@ -21,33 +21,25 @@ class AltmetricLoader:
         result.altmetric_score = float(data["altmetric_score"]["score"])
         result.article_title = data["citation"]["title"]
         result.journal_title = data["citation"]["journal"]
-        result.altmetric_journal_id = data["citation"]["altmetric_jid"]
+
+        if 'altmetric_jid' not in data["citation"]:
+
+            result.altmetric_journal_id = 'N/A'
+
+        else:
+
+            result.altmetric_journal_id = data["citation"]["altmetric_jid"]
+
         result.total_mentions = data["counts"]["total"]["posts_count"]
         result.print_publication_date = data["citation"]["pubdate"]
         result.first_seen_on_date = data["citation"]["first_seen_on"]
-        result.first_author = data["citation"]["authors"][0]
 
+        if 'authors' not in data["citation"]:
+
+            result.first_author = 'N/A'
+
+        else:
+            result.first_author = data["citation"]["authors"][0]
 
         return result
 
-    def __parse_authors(self, authors):
-
-        """Conflates all the authors in the authors array in the 
-        Altmetric citation > authors field into a single string.
-        Checks to see if the author value has actually been set, as sometimes blank values are returned by Altmetric.
-        Separates the authors with semi-colons (so as not to confuse any CSV creation later on) and spaces.
-        Removes the final two characters (i.e. the final semi-colon and space."""
-
-        conflated_authors = ""
-
-        for author in authors:
-
-            author = author.strip()
-
-            if author and author is not None:
-
-                conflated_authors += "{0}; ".format(author)
-
-        conflated_authors = conflated_authors[:-2]
-
-        return conflated_authors
