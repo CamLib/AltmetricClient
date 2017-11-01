@@ -47,7 +47,7 @@ class CSVWriterMaster:
 
         fieldnames = ['doi', 'altmetric_id', 'altmetric_score', 'article_title', 'journal_title',
                       'altmetric_journal_id','total_mentions', 'print_publication_date', 'first_seen_on_date',
-                      'authors']
+                      'first_author']
 
         try:
 
@@ -67,7 +67,7 @@ class CSVWriterMaster:
                                    total_mentions=self.altmetric.total_mentions,
                                    print_publication_date=self.altmetric.print_publication_date,
                                    first_seen_on_date=self.altmetric.first_seen_on_date,
-                                   authors=self.altmetric.first_author)
+                                   first_author=self.altmetric.first_author)
 
                 output_writer.writerow(output_dict)
 

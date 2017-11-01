@@ -28,7 +28,7 @@ class TestBareMinimumMasterOutput:
         self._test_altmetric.total_mentions = 78
         self._test_altmetric.print_publication_date = '2013-02-27T00:00:00+00:00'
         self._test_altmetric.first_seen_on_date = '2014-03-15T00:00:00+00:00'
-        self._test_altmetric.first_author = 'Test Author 1, Test Author 2'
+        self._test_altmetric.first_author = 'Test Author 1'
 
         self.test_csv_writer_master = CSVWriterMaster(self._test_file_name, self._files_out_directory, self._test_altmetric)
 
@@ -151,7 +151,7 @@ class TestBareMinimumMasterOutput:
         with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
             test_output_reader = DictReader(test_output_csv)
 
-            assert next(test_output_reader)['authors'] == 'Test Author 1, Test Author 2'
+            assert next(test_output_reader)['first_author'] == 'Test Author 1'
 
     def test_new_article_info_appended_to_existing_file(self):
 

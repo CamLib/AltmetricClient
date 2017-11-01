@@ -14,7 +14,7 @@ class TestIssue9:
         config_data = configparser.ConfigParser()
 
         self.files_out_directory = "../files_out/"
-        self.test_output_file_name = "test_issue9results.csv"
+        self.test_output_file_name = "test_issue8results.csv"
         self.filepath = '{0}{1}'.format(self.files_out_directory, self.test_output_file_name)
 
         if os.path.isfile(self.filepath):
@@ -45,32 +45,27 @@ class TestIssue9:
         self.csv_writer.altmetric = altmetric
         self.csv_writer.write_master()
 
-    def test_doi_ends_with_61611_0(self):
+    def test_doi_ends_with_08_029(self):
 
-        self._run_test_with_doi('10.1016/s0140-6736(12)61611-0')
+        self._run_test_with_doi('10.1016/j.cell.2014.08.029')
         assert os.path.isfile(self.filepath)
 
-    def test_doi_ends_with_10137_x(self):
+    def test_doi_ends_with_09_033(self):
 
-        self._run_test_with_doi('10.1016/s0140-6736(98)10137-x')
+        self._run_test_with_doi('10.1016/j.socscimed.2012.09.033')
         assert os.path.isfile(self.filepath)
 
-    def test_doi_ends_with_15264(self):
+    def test_doi_ends_with_0366_6(self):
 
-        self._run_test_with_doi('10.1017/s0022143000015264')
+        self._run_test_with_doi('10.1007/s10113-012-0366-6')
         assert os.path.isfile(self.filepath)
 
-    def test_doi_ends_with_p0048(self):
+    def test_doi_ends_with_12_071(self):
 
-        self._run_test_with_doi('10.20965/jdr.2012.p0048')
+        self._run_test_with_doi('10.1016/j.econlet.2011.12.071')
         assert os.path.isfile(self.filepath)
 
-    def test_doi_ends_with_166983(self):
+    def test_doi_ends_with_ast051(self):
 
-        self._run_test_with_doi('10.1145/2166966.2166983')
-        assert os.path.isfile(self.filepath)
-
-    def test_doi_ends_with_45357(self):
-
-        self._run_test_with_doi('10.1145/2145204.2145347')
+        self._run_test_with_doi('10.1093/biomet/ast051')
         assert os.path.isfile(self.filepath)
