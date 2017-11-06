@@ -19,7 +19,12 @@ class AltmetricLoader:
         result = Altmetric()
         result.altmetric_id = str(data["altmetric_id"])
         result.altmetric_score = float(data["altmetric_score"]["score"])
-        result.article_title = data["citation"]["title"]
+
+        # strips all the newlines and extraneous whitespace out of the title.
+        title = str(data["citation"]["title"])
+        title = ' '.join(title.split())
+
+        result.article_title = title
         result.journal_title = data["citation"]["journal"]
 
         if 'altmetric_jid' not in data["citation"]:
