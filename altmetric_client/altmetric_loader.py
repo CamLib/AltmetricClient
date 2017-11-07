@@ -37,7 +37,8 @@ class AltmetricLoader:
             result.first_author = 'N/A'
 
         else:
-            result.first_author = data["citation"]["authors"][0]
+
+            result.first_author = self._find_first_author(data["citation"]["authors"])
 
         return result
 
@@ -47,4 +48,24 @@ class AltmetricLoader:
         Strips all the breaks and extra white spaces out of a given string
         :rtype: str
         """
+
         return ' '.join(str(broken_string).split())
+
+    def _find_first_author(self, authors):
+
+        """
+        Checks for dirty data in the first author in the list. Issues 10 and 12
+        describe more - there are missing first authors in the list, commas and carriage returns in the
+        author data.
+        :rtype: str
+        """
+        if len(authors) > 0:
+
+            first_value = self._strip_breaks_and_spaces(str(authors[0]))
+
+            if len(first_value) == 0 or first_value == ',':
+                return self._strip_breaks_and_spaces(str(authors[1]))
+            else:
+                return first_value
+
+
