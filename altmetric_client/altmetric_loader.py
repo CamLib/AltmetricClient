@@ -8,9 +8,6 @@ class AltmetricLoader:
     wrap a decent set of tests around the whole process, too (which might come in handy if someone
     changes the Altmetric API in a way that breaks what we're trying to do with it)."""
 
-    # Need a way of testing all these answers for 'None' and returning 'Not found' or something
-    # Should be able to start adding those checks once we do a bit more rigorous testing with more 'real' data
-
     def parse_result(self, data=None):
 
         """Takes a data object based upon some Altmetric JSON and writes the fields we want 
@@ -20,11 +17,7 @@ class AltmetricLoader:
         result.altmetric_id = str(data["altmetric_id"])
         result.altmetric_score = float(data["altmetric_score"]["score"])
 
-        # strips all the newlines and extraneous whitespace out of the title.
-        title = str(data["citation"]["title"])
-        title = ' '.join(title.split())
-
-        result.article_title = title
+        result.article_title = self._strip_breaks_and_spaces(data["citation"]["title"])
         result.journal_title = data["citation"]["journal"]
 
         if 'altmetric_jid' not in data["citation"]:
@@ -48,3 +41,10 @@ class AltmetricLoader:
 
         return result
 
+    def _strip_breaks_and_spaces(self, broken_string):
+
+        """
+        Strips all the breaks and extra white spaces out of a given string
+        :rtype: str
+        """
+        return ' '.join(str(broken_string).split())
