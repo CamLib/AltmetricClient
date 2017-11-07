@@ -56,11 +56,15 @@ This has a couple of implications for testing (see below).
 
 ## Testing
 
-The code is a little 'impure' in terms of testing, in that there are what some people might (probably correctly) call Integration Tests mashed in with Unit Tests.
+The code is a little 'impure' in terms of testing, in that there are what some people might (probably correctly) call Integration Tests mashed in with Unit Tests. As a result, there are three directories with tests in.
 
-These are around things like loading lists of DOIs in from CSVs (there's a files_in directory in the codebase, with a test file in it), and actually exercising the real Altmetric API endpoint.
+All tests that are independent and can be run locally are in the 'tests' folder. This still contains some tests that might not be considered 'pure' Unit Tests, i.e. tests to read lists of DOIs in from CSVs (there's a files_in directory in the codebase, with a test file in it).
 
-The former example at least relies upon a local resource (i.e. a test CSV loaded in from the files-in directory)... These means related tests will fail in PyCharm unless the local 'working directory' for those tests has been set in the run config.
+Then the other two test directories (tests_integration and tests_issues) contain some tests that call out to the Altmetric endpoint. As such, these should only be run one at a time, and very occasionally - like when a config change has been made, or if the endpoint changes.
+
+Oddly enough, the tests_issues directory contains tests that map onto issues in the issues list. They're mostly included for a bit of history and documentation.
+
+All three directories contain tests that rely upon a local resources (e.g. test CSVs loaded in from the files-in directory or written to files_out)... This means tests will fail in PyCharm unless the local 'working directory' for those tests has been set in the run config.
 
 See [https://www.jetbrains.com/help/pycharm/run-debug-configuration.html](https://www.jetbrains.com/help/pycharm/run-debug-configuration.html)...
 
