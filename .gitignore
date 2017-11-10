@@ -123,3 +123,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+.Rproj.user
+
+# R user files
+
+/altmetric_data_analysis/.Rproj.user
+/altmetric_data_analysis/.Rhistory
+/altmetric_data_analysis/.RData
