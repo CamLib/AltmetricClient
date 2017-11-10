@@ -17,7 +17,9 @@ ggplot(articles, aes(x = print_publication_date, y = total_mentions)) +
   geom_smooth()
 
 # plots the articles and the trend on the same chart
+# outlying articles with > 500 mentions excluded
 
 ggplot(articles, aes(x = print_publication_date, y = total_mentions)) +
   geom_point() +
-  geom_smooth()
+  geom_smooth() +
+  coord_cartesian(ylim = c(0, 500))
