@@ -45,7 +45,6 @@ class AltmetricClientFacade:
             try:
                 altmetric_data = altmetric_request.request()
                 altmetric = altmetric_loader.parse_result(altmetric_data)
-                altmetric.doi = doi
                 csv_writer.altmetric = altmetric
                 csv_writer.write_master()
                 print('{0}/{1} DOIs retrieved'.format(total_retrieved, total_dois))
