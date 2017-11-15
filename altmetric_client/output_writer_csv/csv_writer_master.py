@@ -1,32 +1,18 @@
+from altmetric_client.output_writer_csv.csv_writer_base import CSVWriterBase
 from altmetric_client.altmetric import Altmetric
 from csv import DictWriter
 import os.path
 
 
-class CSVWriterMaster:
+class CSVWriterMaster(CSVWriterBase):
+
     def __init__(self,
                  output_file_name=None,
                  output_directory_name=None,
                  altmetric=None):
-        self._output_file_name = output_file_name
-        self._output_directory_name = output_directory_name
+
+        CSVWriterBase.__init__(self, output_file_name, output_directory_name)
         self._altmetric = altmetric
-
-    @property
-    def output_file_name(self):
-        return self._output_file_name
-
-    @output_file_name.setter
-    def output_file_name(self, output_file_name):
-        self._output_file_name = output_file_name
-
-    @property
-    def output_directory_name(self):
-        return self._output_directory_name
-
-    @output_directory_name.setter
-    def output_directory_name(self, output_directory_name):
-        self._output_directory_name = output_directory_name
 
     @property
     def altmetric(self):
@@ -105,9 +91,3 @@ class CSVWriterMaster:
 
             return True
 
-    def _get_write_mode(self, filepath):
-
-        if os.path.isfile(filepath):
-            return 'a'
-        else:
-            return 'w'
