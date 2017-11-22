@@ -1,7 +1,7 @@
 import sys
 
 from altmetric_client.altmetric_api_config import AltmetricAPIConfig
-from altmetric_client.output_writer_csv.csv_writer_master import CSVWriterMaster
+from altmetric_client.output_writer_csv.csv_writer_facade import CSVWriterFacade
 from altmetric_client.url_builder import URLBuilder
 from altmetric_client.altmetric_request import AltmetricRequest
 from altmetric_client.altmetric_loader import AltmetricLoader
@@ -14,7 +14,7 @@ class AltmetricClientFacade:
                  files_in_directory:str=None,
                  input_file_name:str=None,
                  files_out_directory:str=None,
-                 output_file_name:str=None):
+                 output_files_root:str=None):
 
         # this is where to set a behaviour (e.g. 'write csv', 'write something else', 'generate list'
         # at some point later on when the AltmetricClient supports multiple behaviours
@@ -23,11 +23,11 @@ class AltmetricClientFacade:
         self._files_in_directory = files_in_directory
         self._input_file_name = input_file_name
         self._files_out_directory = files_out_directory
-        self._output_file_name = output_file_name
+        self._output_files_root = output_files_root
 
     def execute(self):
 
-        csv_writer = CSVWriterMaster(self._output_file_name, self._files_out_directory)
+        csv_writer = CSVWriterFacade(self._files_out_directory, self._output_files_root)
         url_builder = URLBuilder(self._config)
         altmetric_request = AltmetricRequest(url_builder)
         doi_loader = DOIInputFileLoader('{0}{1}'.format(self._files_in_directory,self._input_file_name))
@@ -45,8 +45,7 @@ class AltmetricClientFacade:
             try:
                 altmetric_data = altmetric_request.request()
                 altmetric = altmetric_loader.parse_result(altmetric_data)
-                csv_writer.altmetric = altmetric
-                csv_writer.write_master()
+                csv_writer.write(altmetric)
                 print('{0}/{1} DOIs retrieved'.format(total_retrieved, total_dois))
                 total_retrieved += 1
 

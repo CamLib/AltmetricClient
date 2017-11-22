@@ -78,13 +78,20 @@ class AltmetricLoader:
 
         for source in posts_data:
 
-            for altmetric_mention in posts_data[source]:
+            try:
 
-                mention = Mention()
-                mention.source = str(source)
-                mention.related_article_doi = result.doi
-                mention.url = altmetric_mention['url']
-                mention.date_posted = altmetric_mention['posted_on']
-                result.add_mention(mention)
+                for altmetric_mention in posts_data[source]:
+
+                    mention = Mention()
+                    mention.source = str(source)
+                    mention.related_article_doi = result.doi
+                    mention.url = altmetric_mention['url']
+                    mention.date_posted = altmetric_mention['posted_on']
+                    result.add_mention(mention)
+
+            except:
+
+                print("An error occurred when processing mentions for source: {0}, article DOI: {1}".format(str(source),
+                        result.doi))
 
         return result

@@ -34,12 +34,12 @@ class TestAltmetricFacadeCSVWriting:
         _test_input_file_name = 'test_dois_minimum_end_to_end.csv'
         _files_in_directory = '../files_in/'
 
-        _test_output_file_name = 'test_bare_minimum_end_to_end.csv'
+        _test_output_name_root = 'test_bare_minimum_end_to_end'
         _files_out_directory = '../files_out/'
 
         # Delete the pre-existing output file if it's there
 
-        filepath = '{0}{1}'.format(_files_out_directory, _test_output_file_name)
+        filepath = '{0}{1}'.format(_files_out_directory, _test_output_name_root)
 
         if os.path.isfile(filepath):
             os.remove(filepath)
@@ -63,13 +63,19 @@ class TestAltmetricFacadeCSVWriting:
                                                         _files_in_directory,
                                                         _test_input_file_name,
                                                         _files_out_directory,
-                                                        _test_output_file_name)
+                                                        _test_output_name_root)
 
         test_altmetric_facade.execute()
 
+    def setup_method(self):
+
+        self._test_master_output_file_path = '../files_out/test_bare_minimum_end_to_end_master.csv'
+        self._test_mentions_output_file_path = '../files_out/test_bare_minimum_end_to_end_mentions.csv'
+
+
     def test_csv_writing_end_to_end_writes_altmetric_id(self):
 
-        with open('{0}{1}'.format('../files_out/', 'test_bare_minimum_end_to_end.csv')) as test_output_csv:
+        with open(self._test_master_output_file_path) as test_output_csv:
 
             test_output_reader = DictReader(test_output_csv)
 
@@ -77,8 +83,20 @@ class TestAltmetricFacadeCSVWriting:
 
     def test_csv_writing_end_to_end_writes_doi(self):
 
-        with open('{0}{1}'.format('../files_out/', 'test_bare_minimum_end_to_end.csv')) as test_output_csv:
+        with open(self._test_master_output_file_path) as test_output_csv:
 
             test_output_reader = DictReader(test_output_csv)
 
             assert next(test_output_reader)['doi'] == '10.1001/jama.2013.950'
+
+    def test_mentions_csv_contains_you_are_informed_tweet(self):
+
+        with open(self._test_mentions_output_file_path) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            for row in test_output_reader:
+
+                if row['url'] == 'http://twitter.com/youareinformed/statuses/307101916456951811':
+
+                    assert True

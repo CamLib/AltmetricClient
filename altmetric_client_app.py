@@ -37,9 +37,9 @@ class AltmetricClient:
         input_dir = input('Enter an input directory (with trailing slash):')
         input_file = input('Enter the DOI list input file name:')
         output_dir = input('Enter an output directory (with trailing slash):')
-        output_file = input('Enter the name of the output file:')
+        output_files_root = input('Enter the name root for the output files (e.g. "19720315_0830" for "19720315_0830_master.csv" etc):')
 
-        altmetric_facade = AltmetricClientFacade(api_config, input_dir, input_file, output_dir, output_file)
+        altmetric_facade = AltmetricClientFacade(api_config, input_dir, input_file, output_dir, output_files_root)
         altmetric_facade.execute()
 
 
