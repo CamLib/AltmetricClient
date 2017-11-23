@@ -17,7 +17,13 @@ ggplot(data = mentions) +
 filter(mentions, source == 'linkedin') %>%
   View()
 
-# TODO Plot a histogram / freq_poly of tweet freqencies
+# Plots a freqpoly of tweet freqencies for the whole set, by week
+
+filter(mentions, source == 'twitter') %>%
+  ggplot(aes(date_posted)) +
+         geom_freqpoly(binwidth = 604800)
+  
+
 # TODO Facets of mention frequency per article for different channels... (this will be hard as Twitter stomps on everything)
 # TODO Facets of tweet frequency for a subset of similar papers (maybe)?
 
