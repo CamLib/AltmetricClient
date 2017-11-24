@@ -4,7 +4,7 @@ library(tidyverse)
 
 # load an articles master file
 
-articles <- read_csv("../files_out/20171107_Master_BareMinimum.csv")
+articles <- read_csv("../files_out/20171122_0807_master.csv")
 
 # Orders articles by total_mentions descending
 
@@ -23,4 +23,5 @@ summarise(articles, mean(total_mentions))
 # Calculates the interquartile range of the total mentions
 
 summarise(articles, IQR(total_mentions))
+
 
