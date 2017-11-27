@@ -34,17 +34,25 @@ filter(mentions, related_article_doi == '10.1136/bmj.g3725' & source != 'twitter
   geom_freqpoly(binwidth = 86400) +
   facet_wrap(~ source)
 
+# Join the two datasets.
+
+articles_with_mentions <- articles %>% 
+  left_join(mentions, by = c("doi" = "related_article_doi"))
+
+articles_with_mentions %>% View()
+
 # Facets tweet frequency for a subset of similar papers
 # There are 9 articles in the set with a similar number of mentions 
 # (20 either side of the average) all published in 2014
 
-average_articles <- filter(articles,  +
+
+average_articles <- filter(articles_with_mentions,  +
                              between(total_mentions, 70, 110) & + 
                              print_publication_date > "2014-01-01" & +
                              print_publication_date < "2014-12-31")
 
-arrange(average_articles, desc(print_publication_date)) %>% View()
+# Facets a freqpoly of mention freqencies for the average articles
 
-average_article_dois <- select(average_articles, doi)
-
-# TODO - some sort of filtering join with the two datasets.
+ggplot(data = average_articles, mapping = aes(x = date_posted)) +
+  geom_freqpoly(binwidth = 604800) +
+  facet_wrap(~ doi)
