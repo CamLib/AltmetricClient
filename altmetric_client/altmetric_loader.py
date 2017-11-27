@@ -1,4 +1,5 @@
 from altmetric_client.altmetric import Altmetric
+from altmetric_client.mention import Mention
 
 class AltmetricLoader:
 
@@ -18,6 +19,9 @@ class AltmetricLoader:
         result.altmetric_score = float(data["altmetric_score"]["score"])
 
         result.article_title = self._strip_breaks_and_spaces(data["citation"]["title"])
+
+        result.doi = str(data['citation']['doi'])
+
         result.journal_title = data["citation"]["journal"]
 
         if 'altmetric_jid' not in data["citation"]:
@@ -39,6 +43,8 @@ class AltmetricLoader:
         else:
 
             result.first_author = self._find_first_author(data["citation"]["authors"])
+
+        result = self._load_mentions(result, data["posts"])
 
         return result
 
@@ -68,4 +74,24 @@ class AltmetricLoader:
             else:
                 return first_value
 
+    def _load_mentions(self, result:Altmetric, posts_data):
 
+        for source in posts_data:
+
+            try:
+
+                for altmetric_mention in posts_data[source]:
+
+                    mention = Mention()
+                    mention.source = str(source)
+                    mention.related_article_doi = result.doi
+                    mention.url = altmetric_mention['url']
+                    mention.date_posted = altmetric_mention['posted_on']
+                    result.add_mention(mention)
+
+            except:
+
+                print("An error occurred when processing mentions for source: {0}, article DOI: {1}".format(str(source),
+                        result.doi))
+
+        return result

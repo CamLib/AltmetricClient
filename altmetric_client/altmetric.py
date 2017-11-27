@@ -1,3 +1,5 @@
+from altmetric_client.mention import Mention
+
 class Altmetric:
 
     def __init__(self):
@@ -12,6 +14,8 @@ class Altmetric:
         self.__print_publication_date = None
         self.__first_seen_on_date = None
         self.__first_author = None
+
+        self.__mentions = []
 
     @property
     def doi(self):
@@ -92,4 +96,11 @@ class Altmetric:
     @first_author.setter
     def first_author(self, authors):
         self.__first_author = authors
+
+    @property
+    def mentions(self):
+        return self.__mentions
+
+    def add_mention(self, mention:Mention):
+        self.__mentions.append(mention)
 
