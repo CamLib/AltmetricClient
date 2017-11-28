@@ -48,7 +48,7 @@ class Author:
         return self.__image_url
 
     @image_url.setter
-    def image(self, image_url: str):
+    def image_url(self, image_url: str):
         self.__image_url = image_url
 
     @property

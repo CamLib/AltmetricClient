@@ -6,6 +6,7 @@ class Mention:
         self.__source = None
         self.__url = None
         self.__date_posted = None
+        self.__author_id = None
 
     @property
     def related_article_doi(self):
@@ -39,3 +40,11 @@ class Mention:
     @date_posted.setter
     def date_posted(self, date_posted):
         self.__date_posted = date_posted
+
+    @property
+    def author_id(self):
+        return self.__author_id
+
+    @author_id.setter
+    def author_id(self, author_id):
+        self.__author_id = author_id

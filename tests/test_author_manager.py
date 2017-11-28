@@ -95,11 +95,86 @@ class TestAuthorManager:
 
         assert result[2].author_id == 'facebook3'
 
+    def test_adding_author_googleplus_source(self):
 
-    def test_adding_author_different_source_url_id_field(self):
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'googleplus'
+        url_id_field_author.id_on_source = 'testauthor1'
 
-        author_id = self.test_author_manager.add_author(self.test_twitter_author1)
-        author_id2 = self.test_author_manager.add_author(self.test_twitter_author2)
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'googleplus1'
+
+    def test_adding_author_reddit_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'reddit'
+        url_id_field_author.id_on_source = 'testauthor1'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'reddit1'
+
+    def test_adding_author_video_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'video'
+        url_id_field_author.id_on_source = 'testauthor1'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'video1'
+
+    def test_adding_author_q_and_a_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'q&a'
+        url_id_field_author.id_on_source = 'testauthor1'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'q&a1'
+
+    def test_adding_author_weibo_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'weibo'
+        url_id_field_author.id_on_source = 'testauthor1'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'weibo1'
+
+    def test_adding_author_peer_review_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'peer_reviews'
+        url_id_field_author.id_on_source = 'testauthor1'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'peer_reviews1'
+
+
+    def test_adding_author_blogs_source(self):
 
         url_id_field_author = Author()
         url_id_field_author.name = "Test Author 1"
@@ -110,5 +185,105 @@ class TestAuthorManager:
 
         result = self.test_author_manager.authors
 
-        assert result[2].author_id == 'blogs3'
+        assert result[0].author_id == 'blogs1'
 
+    def test_adding_author_news_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'news'
+        url_id_field_author.url = 'http://testauthor1.com'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'news1'
+
+    def test_adding_author_wikipedia_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'wikipedia'
+        url_id_field_author.url = 'http://testauthor1.com'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'wikipedia1'
+
+    def test_adding_author_misc_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'misc'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'misc1'
+
+    def test_adding_author_pinterest_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'pinterest'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'pinterest1'
+
+    def test_adding_author_linkedin_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'linkedin'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'linkedin1'
+
+    def test_adding_author_policy_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'policy'
+
+        author_id3 = self.test_author_manager.add_author(url_id_field_author)
+
+        result = self.test_author_manager.authors
+
+        assert result[0].author_id == 'policy1'
+
+    def test_adding_author_f1000_source(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'f1000'
+
+        assert self.test_author_manager.add_author(url_id_field_author) == 'NA'
+
+    def test_adding_author_unanticipated_source_returns_NA(self):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'unanticipated'
+
+        assert self.test_author_manager.add_author(url_id_field_author) == 'NA'
+
+    def test_adding_author_unanticipated_source_prints_the_source_name(self, capfd):
+
+        url_id_field_author = Author()
+        url_id_field_author.name = "Test Author 1"
+        url_id_field_author.source = 'unanticipated'
+
+        result = self.test_author_manager.add_author(url_id_field_author) == 'NA'
+
+        out, err = capfd.readouterr()
+        assert out == 'Author had unanticipated source: unanticipated\n'
