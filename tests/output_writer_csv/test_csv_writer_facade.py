@@ -4,6 +4,7 @@ from csv import DictReader
 from altmetric_client.output_writer_csv.csv_writer_facade import CSVWriterFacade
 from altmetric_client.altmetric import Altmetric
 from altmetric_client.mention import Mention
+from altmetric_client.author import Author
 
 class TestCSVWriterFacade:
 
@@ -14,6 +15,7 @@ class TestCSVWriterFacade:
 
         self.master_filepath = '{0}{1}_master.csv'.format(output_directory_name, test_file_root)
         self.mentions_filepath = '{0}{1}_mentions.csv'.format(output_directory_name, test_file_root)
+        self.authors_filepath = '{0}{1}_authors.csv'.format(output_directory_name, test_file_root)
 
         # clean up the old test files in the setup
 
@@ -22,6 +24,9 @@ class TestCSVWriterFacade:
 
         if os.path.isfile(self.mentions_filepath):
             os.remove(self.mentions_filepath)
+
+        if os.path.isfile(self.authors_filepath):
+            os.remove(self.authors_filepath)
 
         test_altmetric = Altmetric()
         test_altmetric.altmetric_id = 1234
@@ -33,8 +38,14 @@ class TestCSVWriterFacade:
 
         test_altmetric.add_mention(test_mention)
 
+        test_authors_list = []
+        test_author = Author()
+        test_author.author_id = 'testsource1'
+        test_authors_list.append(test_author)
+
         self.test_csv_writer_facade = CSVWriterFacade(output_directory_name, test_file_root)
         self.test_csv_writer_facade.write(test_altmetric)
+        self.test_csv_writer_facade.write_authors(test_authors_list)
 
     def teardown_method(self):
 
@@ -75,7 +86,7 @@ class TestCSVWriterFacade:
             next(test_output_reader)
             assert int(next(test_output_reader)['altmetric_id']) == 9876
 
-    def test_mention_from_second_altmetric_written_to_master(self):
+    def test_mention_from_second_altmetric_written_to_mentions(self):
 
         second_altmetric = Altmetric()
         second_altmetric.altmetric_id = 9876
@@ -107,3 +118,22 @@ class TestCSVWriterFacade:
 
         out, err = capfd.readouterr()
         assert out == '1 mentions successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
+
+    def test_authors_written(self):
+
+        with open(self.authors_filepath) as test_authors_output_csv:
+
+            test_output_reader = DictReader(test_authors_output_csv)
+            assert next(test_output_reader)['author_id'] == 'testsource1'
+
+    def test_console_outputs_number_of_authors_written(self, capfd):
+
+        second_authors_list = []
+        second_author = Author()
+        second_author.author_id = 'testsource2'
+        second_authors_list.append(second_author)
+
+        self.test_csv_writer_facade.write_authors(second_authors_list)
+
+        out, err = capfd.readouterr()
+        assert out == '1 authors successfully written\n'
