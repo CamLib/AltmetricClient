@@ -26,7 +26,7 @@ class CSVWriterMention(CSVWriterBase):
 
         write_mode = self._get_write_mode(output_file_path)
 
-        fieldnames = ['related_article_doi', 'url', 'source', 'date_posted']
+        fieldnames = ['related_article_doi', 'url', 'source', 'date_posted', 'author_id']
 
         try:
 
@@ -42,13 +42,14 @@ class CSVWriterMention(CSVWriterBase):
                     output_dict = dict(related_article_doi=mention.related_article_doi,
                                        url=mention.url,
                                        source=mention.source,
-                                       date_posted=mention.date_posted)
+                                       date_posted=mention.date_posted,
+                                       author_id=mention.author_id)
 
                     output_writer.writerow(output_dict)
 
         except:
 
-            print('Something totally unexpected happened when trying to write to a Master CSV file')
+            print('Something totally unexpected happened when trying to write to a Mentions CSV file')
             print('The writer was setup to write to a file called {0}{1}'.format(self.output_directory_name,
                                                                                  self.output_file_name))
             if write_mode == 'a':

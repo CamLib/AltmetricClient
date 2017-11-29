@@ -24,14 +24,16 @@ class TestBareMinimumMentionsOutput:
         test_mention_1.url = 'http://testurl1.com'
         test_mention_1.source = 'testsource1'
         test_mention_1.date_posted = '2016-03-31T11:00:00+00:00'
+        test_mention_1.author_id = 'testsource11'
 
         test_mentions_list.append(test_mention_1)
 
         test_mention_2 = Mention()
         test_mention_2.related_article_doi = '/Test/DOI/4321'
         test_mention_2.url = 'http://testurl2.com'
-        test_mention_2.source = 'testsource2'
+        test_mention_2.source = 'testsource22'
         test_mention_2.date_posted = '2015-03-15T12:00:00+00:00'
+        test_mention_2.author_id = 'testsource21'
 
         test_mentions_list.append(test_mention_2)
 
@@ -101,6 +103,15 @@ class TestBareMinimumMentionsOutput:
 
             assert next(test_output_reader)['date_posted'] == '2016-03-31T11:00:00+00:00'
 
+    def test_author_id_added_to_mentions(self):
+
+        self.test_csv_writer_mentions.write_mentions()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['author_id'] == 'testsource11'
+
     def test_second_mention_url_added(self):
 
         self.test_csv_writer_mentions.write_mentions()
@@ -122,6 +133,7 @@ class TestBareMinimumMentionsOutput:
         third_mention.url = 'http://testurl3.com'
         third_mention.source = 'testsource3'
         third_mention.date_posted = '2014-03-15T13:00:00+00:00'
+        third_mention.date_posted = 'testsource33'
 
         extra_mentions.append(third_mention)
 
