@@ -100,3 +100,5 @@ class TestAltmetricFacadeCSVWriting:
                 if row['url'] == 'http://twitter.com/youareinformed/statuses/307101916456951811':
 
                     assert True
+
+    #TODO - add a test for the authors writer functionality that I've already added to the facade.
