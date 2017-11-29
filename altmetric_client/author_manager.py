@@ -2,9 +2,11 @@ from altmetric_client.author import Author
 
 class AuthorManager:
 
-    '''This class is a hack currently. I'd like it to be fully extensible with the author id
-    rules in the config. (If this was C# I could do so with reflection - I suspect I'll be able
-    to do something similar with Python, but I don't have time to find out right now).'''
+    '''This class is still a bit of a hack. At least it uses reflection now (reflection in Python seems to be
+    as easy as the rest of it). However, it would be nice to move the field rules dictionary to the config.ini
+    and pass them in, so adding new rules about authors from other sources as yet unknown is just a matter of
+    changing the config. (Unless the identifying property is a property that none of the current authors have,
+    of course...)'''
 
     def __init__(self):
 
@@ -36,41 +38,26 @@ class AuthorManager:
         '''One of the sources quite handily has an ampersand in it, which means
         it can't be used as the key in a dictionary.'''
 
-        existing_author = None
-        rules_key = str(author.source).replace('&', '')
-
         try:
 
-            if self.__author_id_field_rules[rules_key] == 'id_on_source':
+            rules_key = str(author.source).replace('&', '')
+            identifying_property = self.__author_id_field_rules[rules_key]
 
-                existing_author = [existing
-                                   for existing in self.__authors
-                                   if existing.source == author.source
-                                   and existing.id_on_source == author.id_on_source]
-
-            elif self.__author_id_field_rules[rules_key] == 'url':
-
-                existing_author = [existing
-                                   for existing in self.__authors
-                                   if existing.source == author.source
-                                   and existing.url == author.url]
-
-            elif self.__author_id_field_rules[rules_key] == 'name':
-
-                existing_author = [existing
-                                   for existing in self.__authors
-                                   if existing.source == author.source
-                                   and existing.name == author.name]
-
-            elif self.__author_id_field_rules[rules_key] == 'NA':
+            if identifying_property == 'NA':
 
                 return 'NA'
+
+            else:
+
+                existing_author = [existing
+                                   for existing in self.__authors
+                                   if existing.source == author.source
+                                   and getattr(existing, identifying_property) == getattr(author, identifying_property)]
 
         except KeyError:
 
             print('Author had unanticipated source: {0}'.format(author.source))
             return 'NA'
-
 
         if len(existing_author) == 1:
 

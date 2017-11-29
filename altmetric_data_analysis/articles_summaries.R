@@ -24,4 +24,8 @@ summarise(articles, mean(total_mentions))
 
 summarise(articles, IQR(total_mentions))
 
+# Returns articles with a certain number of mentions
 
+filter(articles, total_mentions == 10) %>% 
+  arrange(desc(total_mentions)) %>% 
+  View()
