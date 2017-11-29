@@ -26,7 +26,7 @@ class AuthorManager:
                                             misc='name',
                                             pinterest='name',
                                             linkedin='name',
-                                            policy='name',
+                                            policy='image_url',
                                             f1000='NA')
 
     @property

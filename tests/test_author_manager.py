@@ -254,6 +254,7 @@ class TestAuthorManager:
         url_id_field_author = Author()
         url_id_field_author.name = "Test Author 1"
         url_id_field_author.source = 'policy'
+        url_id_field_author.image_url = "http://test_image_url"
 
         author_id3 = self.test_author_manager.add_author(url_id_field_author)
 

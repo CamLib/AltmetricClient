@@ -25,5 +25,24 @@ class TestAuthorLoading:
 
     def test_ten_authors_loaded(self):
 
-        assert len(self.test_authors_list) == 8
+        assert len(self.test_authors_list) == 9
+
+    def test_two_twitter_authors(self):
+
+        twitter_authors = [author for author in self.test_authors_list if author.source == 'twitter']
+
+        assert len(twitter_authors) == 2
+
+    def test_two_twitter_authors(self):
+
+        reddit_authors = [author for author in self.test_authors_list if author.source == 'reddit']
+
+        assert len(reddit_authors) == 1
+
+    def test_three_blogs_authors(self):
+
+        blogs_authors = [author for author in self.test_authors_list if author.source == 'blogs']
+
+        assert len(blogs_authors) == 3
+
 
