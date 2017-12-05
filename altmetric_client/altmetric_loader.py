@@ -134,7 +134,7 @@ class AltmetricLoader:
         if 'name' not in author_data:
             author.name = 'NA'
         else:
-            author.name = author_data['name']
+            author.name = self._strip_breaks_and_spaces(author_data['name'])
 
         if 'url' not in author_data:
             author.url = 'NA'
@@ -149,7 +149,7 @@ class AltmetricLoader:
         if 'description' not in author_data:
             author.description = 'NA'
         else:
-            author.description = author_data['description']
+            author.description = self._strip_breaks_and_spaces(author_data['description'])
 
         if 'id_on_source' not in author_data:
             author.id_on_source = 'NA'

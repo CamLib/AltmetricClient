@@ -4,7 +4,7 @@ library(tidyverse)
 
 # load an articles master file
 
-articles <- read_csv("../files_out/20171122_0807_master.csv")
+articles <- read_csv("../files_out/20171205_0734_master.csv")
 
 # Orders articles by total_mentions descending
 

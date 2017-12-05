@@ -71,6 +71,7 @@ class TestAltmetricFacadeCSVWriting:
 
         self._test_master_output_file_path = '../files_out/test_bare_minimum_end_to_end_master.csv'
         self._test_mentions_output_file_path = '../files_out/test_bare_minimum_end_to_end_mentions.csv'
+        self._test_authors_output_file_path = '../files_out/test_bare_minimum_end_to_end_authors.csv'
 
 
     def test_csv_writing_end_to_end_writes_altmetric_id(self):
@@ -101,4 +102,14 @@ class TestAltmetricFacadeCSVWriting:
 
                     assert True
 
-    #TODO - add a test for the authors writer functionality that I've already added to the facade.
+    def test_authors_csv_contains_youareinformed(self):
+
+        with open(self._test_authors_output_file_path) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            for row in test_output_reader:
+
+                if row['author_id_on_source'] == 'youareinformed':
+
+                    assert True
