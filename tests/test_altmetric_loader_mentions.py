@@ -1,5 +1,6 @@
 from altmetric_client.altmetric_loader import AltmetricLoader
 from altmetric_client.altmetric import Altmetric
+from altmetric_client.author_manager import AuthorManager
 from altmetric_client.mention import Mention
 
 import json
@@ -12,7 +13,9 @@ class TestAltmetricLoaderMentions:
 
         test_data = json.load(self.mentionsJsonFile)
 
+        test_author_manager = AuthorManager()
         test_altmetric_loader = AltmetricLoader()
+        test_altmetric_loader.author_manager = test_author_manager
 
         self.result = test_altmetric_loader.parse_result(test_data)
 

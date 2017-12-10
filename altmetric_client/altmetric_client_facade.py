@@ -4,6 +4,7 @@ from altmetric_client.altmetric_api_config import AltmetricAPIConfig
 from altmetric_client.output_writer_csv.csv_writer_facade import CSVWriterFacade
 from altmetric_client.url_builder import URLBuilder
 from altmetric_client.altmetric_request import AltmetricRequest
+from altmetric_client.author_manager import AuthorManager
 from altmetric_client.altmetric_loader import AltmetricLoader
 from altmetric_client.doi_input import DOIInputFileLoader
 
@@ -34,7 +35,9 @@ class AltmetricClientFacade:
         doi_list = doi_loader.load_dois()
         total_dois = len(doi_list)
         print('{0} DOIs loaded'.format(total_dois))
+        author_manager = AuthorManager()
         altmetric_loader = AltmetricLoader()
+        altmetric_loader.author_manager = author_manager
         total_retrieved = 1
         error_count = 0
 
@@ -56,4 +59,11 @@ class AltmetricClientFacade:
 
         print('Retrieval of {0} DOIs completed with {1} errors'.format(total_dois, error_count))
 
+        complete_author_list = altmetric_loader.authors_list
 
+        print('An author list of {0} authors was extracted from the dataset. Writing these to a CSV'
+              .format(len(complete_author_list)))
+
+        csv_writer.write_authors(complete_author_list)
+
+        print('All done. Have a nice day.')
