@@ -3,6 +3,8 @@ from altmetric_client.mention import Mention
 from altmetric_client.author_manager import AuthorManager
 from altmetric_client.author import Author
 
+import time
+
 class AltmetricLoader:
 
     """Parses out the Altmetric JSON in a manner that we retain some control over.
@@ -11,10 +13,10 @@ class AltmetricLoader:
     wrap a decent set of tests around the whole process, too (which might come in handy if someone
     changes the Altmetric API in a way that breaks what we're trying to do with it)."""
 
-
     def __init__(self):
 
         self.__author_manager = None
+        self.__result = Altmetric()
 
     @property
     def author_manager(self):
@@ -33,39 +35,59 @@ class AltmetricLoader:
         """Takes a data object based upon some Altmetric JSON and writes the fields we want 
         to a local Altmetric object"""
 
-        result = Altmetric()
-        result.altmetric_id = str(data["altmetric_id"])
-        result.altmetric_score = float(data["altmetric_score"]["score"])
+        self.__result.altmetric_id = str(data["altmetric_id"])
+        self.__result.altmetric_score = float(data["altmetric_score"]["score"])
+        self.__result.total_mentions = data["counts"]["total"]["posts_count"]
 
-        result.article_title = self._strip_breaks_and_spaces(data["citation"]["title"])
+        self._load_citation_data(data["citation"])
 
-        result.doi = str(data['citation']['doi'])
+        self._load_mentions(data["posts"])
 
-        result.journal_title = data["citation"]["journal"]
+        return self.__result
 
-        if 'altmetric_jid' not in data["citation"]:
+    def _load_citation_data(self, citation_data):
 
-            result.altmetric_journal_id = 'N/A'
+        self.__result.article_title = self._strip_breaks_and_spaces(citation_data["title"])
+        self.__result.doi = str(citation_data['doi'])
+        self.__result.journal_title = citation_data["journal"]
 
-        else:
+        if 'altmetric_jid' not in citation_data:
 
-            result.altmetric_journal_id = data["citation"]["altmetric_jid"]
-
-        result.total_mentions = data["counts"]["total"]["posts_count"]
-        result.print_publication_date = data["citation"]["pubdate"]
-        result.first_seen_on_date = data["citation"]["first_seen_on"]
-
-        if 'authors' not in data["citation"]:
-
-            result.first_author = 'N/A'
+            self.__result.altmetric_journal_id = 'NA'
 
         else:
 
-            result.first_author = self._find_first_author(data["citation"]["authors"])
+            self.__result.altmetric_journal_id = citation_data["altmetric_jid"]
+        self.__result.print_publication_date = citation_data["pubdate"]
+        self.__result.first_seen_on_date = citation_data["first_seen_on"]
+        if 'authors' not in citation_data:
 
-        result = self._load_mentions(result, data["posts"])
+            self.__result.first_author = 'NA'
 
-        return result
+        else:
+
+            self.__result.first_author = self._find_first_author(citation_data["authors"])
+
+        if 'startpage' not in citation_data:
+            self.__result.page_starts = 'NA'
+        else:
+            self.__result.page_starts = citation_data['startpage']
+
+        if 'endpage' not in citation_data:
+            self.__result.page_ends = 'NA'
+        else:
+            self.__result.page_ends = citation_data['endpage']
+
+        if 'issue' not in citation_data:
+            self.__result.journal_issue = 'NA'
+        else:
+            self.__result.journal_issue = citation_data['issue']
+
+        if 'last_mentioned_on' not in citation_data:
+            self.__result.last_mentioned_date = 'NA'
+        else:
+            self.__result.last_mentioned_date = time.strftime('%Y-%m-%dT%H:%M',
+                                                              time.localtime(citation_data['last_mentioned_on']))
 
     def _strip_breaks_and_spaces(self, broken_string):
 
@@ -93,7 +115,7 @@ class AltmetricLoader:
             else:
                 return first_value
 
-    def _load_mentions(self, result:Altmetric, posts_data):
+    def _load_mentions(self, posts_data):
 
         for source in posts_data:
 
@@ -109,23 +131,21 @@ class AltmetricLoader:
 
                     else:
 
-                        mention_author = self.__parse_author(altmetric_mention['author'], source)
+                        mention_author = self._parse_author(altmetric_mention['author'], source)
                         mention.author_id = self.__author_manager.add_author(mention_author)
 
                     mention.source = str(source)
-                    mention.related_article_doi = result.doi
+                    mention.related_article_doi = self.__result.doi
                     mention.url = altmetric_mention['url']
                     mention.date_posted = altmetric_mention['posted_on']
-                    result.add_mention(mention)
+                    self.__result.add_mention(mention)
 
             except:
 
                 print("An error occurred when processing mentions for source: {0}, article DOI: {1}".format(str(source),
-                        result.doi))
+                        self.__result.doi))
 
-        return result
-
-    def __parse_author(self, author_data, source):
+    def _parse_author(self, author_data, source):
 
         author = Author()
 

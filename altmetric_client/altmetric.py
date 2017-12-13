@@ -9,11 +9,15 @@ class Altmetric:
         self.__altmetric_score = None
         self.__article_title = None
         self.__journal_title = None
+        self.__journal_issue = None
         self.__altmetric_journal_id = None
         self.__total_mentions = None
         self.__print_publication_date = None
         self.__first_seen_on_date = None
         self.__first_author = None
+        self.__page_starts = None
+        self.__page_ends = None
+        self.__last_mentioned_date = None
 
         self.__mentions = []
 
@@ -61,6 +65,14 @@ class Altmetric:
     def altmetric_journal_id(self):
         return self.__altmetric_journal_id
 
+    @property
+    def journal_issue(self):
+        return self.__journal_issue
+
+    @journal_issue.setter
+    def journal_issue(self, journal_issue):
+        self.__journal_issue = journal_issue
+
     @altmetric_journal_id.setter
     def altmetric_journal_id(self, altmetric_journal_id):
         self.__altmetric_journal_id = altmetric_journal_id
@@ -96,6 +108,30 @@ class Altmetric:
     @first_author.setter
     def first_author(self, authors):
         self.__first_author = authors
+
+    @property
+    def page_starts(self):
+        return self.__page_starts
+
+    @page_starts.setter
+    def page_starts(self, page_starts):
+        self.__page_starts = page_starts
+
+    @property
+    def page_ends(self):
+        return self.__page_ends
+
+    @page_ends.setter
+    def page_ends(self, page_ends):
+        self.__page_ends = page_ends
+
+    @property
+    def last_mentioned_date(self):
+        return self.__last_mentioned_date
+
+    @last_mentioned_date.setter
+    def last_mentioned_date(self, last_mentioned_date):
+        self.__last_mentioned_date = last_mentioned_date
 
     @property
     def mentions(self):

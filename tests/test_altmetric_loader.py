@@ -66,7 +66,7 @@ class TestContextInformation:
 
         result = no_authors_loader.parse_result(data)
 
-        assert result.first_author == 'N/A'
+        assert result.first_author == 'NA'
 
     def test_no_altmetric_jid_in_the_data(self):
 
@@ -77,7 +77,7 @@ class TestContextInformation:
 
         result = no_authors_loader.parse_result(data)
 
-        assert result.altmetric_journal_id == 'N/A'
+        assert result.altmetric_journal_id == 'NA'
 
     def test_line_breaks_and_whitespace_in_article_title(self):
 

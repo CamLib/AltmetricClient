@@ -8,6 +8,21 @@ authors <- read_csv("../files_out/20171205_0734_authors.csv")
 mentions <- read_csv("../files_out/20171205_0734_mentions.csv")
 articles <- read_csv("../files_out/20171205_0734_master.csv")
 
+# articles %>% View()
+# mentions %>% View()
+# authors %>% View()
+
+# Join mentions back to authors and write out for Lauren
+
+# mentions %>%
+#  left_join(authors) %>%
+#  write_csv("../files_out/20171205_0734_mentions_with_authors.csv")
+
+# mentions_with_authors <- read_csv("../files_out/20171205_0734_mentions_with_authors.csv")
+# mentions_with_authors %>%
+#  arrange(desc(author_follower_count)) %>%
+#  View()
+
 # who's got the most followers?
 
 filter(authors, author_follower_count > 100000) %>%
