@@ -9,6 +9,7 @@ class Altmetric:
         self.__altmetric_score = None
         self.__article_title = None
         self.__journal_title = None
+        self.__journal_volume = None
         self.__journal_issue = None
         self.__altmetric_journal_id = None
         self.__total_mentions = None
@@ -18,6 +19,11 @@ class Altmetric:
         self.__page_starts = None
         self.__page_ends = None
         self.__last_mentioned_date = None
+        self.__pdf_url = None
+        self.__publisher = None
+        self.__type = None
+        self.__uri = None
+        self.__mendeley_url = None
 
         self.__mentions = []
 
@@ -62,8 +68,12 @@ class Altmetric:
         self.__journal_title = journal_title
 
     @property
-    def altmetric_journal_id(self):
-        return self.__altmetric_journal_id
+    def journal_volume(self):
+        return self.__journal_volume
+
+    @journal_volume.setter
+    def journal_volume(self, journal_volume):
+        self.__journal_volume = journal_volume
 
     @property
     def journal_issue(self):
@@ -72,6 +82,10 @@ class Altmetric:
     @journal_issue.setter
     def journal_issue(self, journal_issue):
         self.__journal_issue = journal_issue
+
+    @property
+    def altmetric_journal_id(self):
+        return self.__altmetric_journal_id
 
     @altmetric_journal_id.setter
     def altmetric_journal_id(self, altmetric_journal_id):
@@ -132,6 +146,46 @@ class Altmetric:
     @last_mentioned_date.setter
     def last_mentioned_date(self, last_mentioned_date):
         self.__last_mentioned_date = last_mentioned_date
+
+    @property
+    def pdf_url(self):
+        return self.__pdf_url
+
+    @pdf_url.setter
+    def pdf_url(self, pdf_url):
+        self.__pdf_url = pdf_url
+
+    @property
+    def publisher(self):
+        return self.__publisher
+
+    @publisher.setter
+    def publisher(self, publisher):
+        self.__publisher = publisher
+
+    @property
+    def type(self):
+        return self.__type
+
+    @type.setter
+    def type(self, type):
+        self.__type = type
+
+    @property
+    def uri(self):
+        return self.__uri
+
+    @uri.setter
+    def uri(self, uri):
+        self.__uri = uri
+
+    @property
+    def mendeley_url(self):
+        return self.__mendeley_url
+
+    @mendeley_url.setter
+    def mendeley_url(self, mendeley_url):
+        self.__mendeley_url = mendeley_url
 
     @property
     def mentions(self):

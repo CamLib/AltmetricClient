@@ -58,8 +58,10 @@ class AltmetricLoader:
         else:
 
             self.__result.altmetric_journal_id = citation_data["altmetric_jid"]
+
         self.__result.print_publication_date = citation_data["pubdate"]
         self.__result.first_seen_on_date = citation_data["first_seen_on"]
+
         if 'authors' not in citation_data:
 
             self.__result.first_author = 'NA'
@@ -78,6 +80,11 @@ class AltmetricLoader:
         else:
             self.__result.page_ends = citation_data['endpage']
 
+        if 'volume' not in citation_data:
+            self.__result.journal_volume = 'NA'
+        else:
+            self.__result.journal_volume = citation_data['volume']
+
         if 'issue' not in citation_data:
             self.__result.journal_issue = 'NA'
         else:
@@ -88,6 +95,31 @@ class AltmetricLoader:
         else:
             self.__result.last_mentioned_date = time.strftime('%Y-%m-%dT%H:%M',
                                                               time.localtime(citation_data['last_mentioned_on']))
+
+        if 'pdf_url' not in citation_data:
+            self.__result.pdf_url = "NA"
+        else:
+            self.__result.pdf_url = citation_data['pdf_url']
+
+        if 'publisher' not in citation_data:
+            self.__result.publisher = 'NA'
+        else:
+            self.__result.publisher = citation_data['publisher']
+
+        if 'type' not in citation_data:
+            self.__result.type = 'NA'
+        else:
+            self.__result.type = citation_data['type']
+
+        if 'uri' not in citation_data:
+            self.__result.uri = 'NA'
+        else:
+            self.__result.uri = citation_data['uri']
+
+        if 'mendeley_url' not in citation_data:
+            self.__result.mendeley_url = 'NA'
+        else:
+            self.__result.mendeley_url = citation_data['mendeley_url']
 
     def _strip_breaks_and_spaces(self, broken_string):
 
