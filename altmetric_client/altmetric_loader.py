@@ -41,6 +41,8 @@ class AltmetricLoader:
 
         self._load_citation_data(data["citation"])
 
+        self._load_demographics(data["demographics"])
+
         self._load_mentions(data["posts"])
 
         return self.__result
@@ -120,6 +122,44 @@ class AltmetricLoader:
             self.__result.mendeley_url = 'NA'
         else:
             self.__result.mendeley_url = citation_data['mendeley_url']
+
+    def _load_demographics(self, demographics_data):
+
+        self.__result.poster_type_members_of_public_count = 0
+        self.__result.poster_type_researcher_count = 0
+        self.__result.poster_type_practitioner_count = 0
+        self.__result.poster_type_science_communicator_count = 0
+
+        if 'poster_types' not in demographics_data:
+
+            print("Article with DOI {0} did not have poster types demographic data."
+                  .format(self.__result.doi))
+
+        else:
+
+            for poster_type in demographics_data['poster_types']:
+
+                if poster_type == 'member_of_the_public':
+
+                    self.__result.poster_type_members_of_public_count = demographics_data['poster_types'][poster_type]
+
+                elif poster_type == 'researcher':
+
+                    self.__result.poster_type_researcher_count = demographics_data['poster_types'][poster_type]
+
+                elif poster_type == 'practitioner':
+
+                    self.__result.poster_type_practitioner_count = demographics_data['poster_types'][poster_type]
+
+                elif poster_type == 'science_communicator':
+
+                    self.__result.poster_type_science_communicator_count = demographics_data['poster_types'][poster_type]
+
+                else:
+
+                    print("Article with DOI {0} had an unexpected demographic poster_type of {1}"
+                          .format(self.__result.doi, poster_type))
+
 
     def _strip_breaks_and_spaces(self, broken_string):
 
