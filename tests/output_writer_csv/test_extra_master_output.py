@@ -43,6 +43,10 @@ class TestExtraMasterOutput:
         self._test_altmetric.type = 'Test type'
         self._test_altmetric.uri = 'http://testuri.com'
         self._test_altmetric.mendeley_url = 'http://mendeley.com/testurl'
+        self._test_altmetric.poster_type_members_of_public_count = 101
+        self._test_altmetric.poster_type_researcher_count = 102
+        self._test_altmetric.poster_type_practitioner_count = 103
+        self._test_altmetric.poster_type_science_communicator_count = 104
 
         self.test_csv_writer_master = CSVWriterMaster(self._test_file_name, self._files_out_directory, self._test_altmetric)
 
@@ -150,3 +154,43 @@ class TestExtraMasterOutput:
             test_output_reader = DictReader(test_output_csv)
 
             assert next(test_output_reader)['mendeley_url'] == "http://mendeley.com/testurl"
+
+    def test_poster_type_members_of_public_count_added(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['poster_count_members_of_public'] == "101"
+
+    def test_poster_type_researcher_count_added(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['poster_count_researcher'] == "102"
+
+    def test_poster_type_practitioner_count_added(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['poster_count_practitioner'] == "103"
+
+    def test_poster_type_science_communicator_count_added(self):
+
+        self.test_csv_writer_master.write_master()
+
+        with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            assert next(test_output_reader)['poster_count_science_communicator'] == "104"
