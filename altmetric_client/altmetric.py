@@ -1,4 +1,5 @@
 from altmetric_client.mention import Mention
+from altmetric_client.subject import Subject
 
 class Altmetric:
 
@@ -30,6 +31,7 @@ class Altmetric:
         self.__poster_type_science_communicator_count = None
 
         self.__mentions = []
+        self.__subjects = []
 
     @property
     def doi(self):
@@ -227,6 +229,14 @@ class Altmetric:
     def mentions(self):
         return self.__mentions
 
-    def add_mention(self, mention:Mention):
+    def add_mention(self, mention: Mention):
         self.__mentions.append(mention)
+
+    @property
+    def subjects(self):
+        return self.__subjects
+
+    def add_subject(self, subject: Subject):
+        self.__subjects.append(subject)
+
 

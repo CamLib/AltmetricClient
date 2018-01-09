@@ -2,6 +2,7 @@ from altmetric_client.altmetric import Altmetric
 from altmetric_client.mention import Mention
 from altmetric_client.author_manager import AuthorManager
 from altmetric_client.author import Author
+from altmetric_client.subject import Subject
 
 import time
 
@@ -122,6 +123,40 @@ class AltmetricLoader:
             self.__result.mendeley_url = 'NA'
         else:
             self.__result.mendeley_url = citation_data['mendeley_url']
+
+        self._load_subjects(citation_data)
+
+    def _load_subjects(self, citation_data):
+
+        if 'subjects' in citation_data:
+
+            for subject in citation_data['subjects']:
+
+                altmetric_subject = Subject()
+                altmetric_subject.doi = self.__result.doi
+                altmetric_subject.scheme = 'altmetric'
+                altmetric_subject.name = subject
+                self.__result.add_subject(altmetric_subject)
+
+        if 'scopus_subjects' in citation_data:
+
+            for subject in citation_data['scopus_subjects']:
+
+                scopus_subject = Subject()
+                scopus_subject.doi = self.__result.doi
+                scopus_subject.scheme = 'scopus'
+                scopus_subject.name = subject
+                self.__result.add_subject(scopus_subject)
+
+        if 'publisher_subjects' in citation_data:
+
+            for subject in citation_data['publisher_subjects']:
+
+                publisher_subject = Subject()
+                publisher_subject.doi = self.__result.doi
+                publisher_subject.scheme = subject['scheme']
+                publisher_subject.name = subject['name']
+                self.__result.add_subject(publisher_subject)
 
     def _load_demographics(self, demographics_data):
 
