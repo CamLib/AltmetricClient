@@ -41,7 +41,6 @@ class TestBareMinimumMentionsOutput:
                                                          self._files_out_directory,
                                                          test_mentions_list)
 
-
     def tear_down_method(self):
 
         self.test_csv_writer_mentions = None
