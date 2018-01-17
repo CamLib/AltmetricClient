@@ -17,7 +17,8 @@ class AltmetricLoader:
     def __init__(self):
 
         self.__author_manager = None
-        self.__result = Altmetric()
+        self.__result = None
+
 
     @property
     def author_manager(self):
@@ -32,6 +33,8 @@ class AltmetricLoader:
         return self.__author_manager.authors
 
     def parse_result(self, data=None):
+
+        self.__result = Altmetric()
 
         """Takes a data object based upon some Altmetric JSON and writes the fields we want 
         to a local Altmetric object"""
