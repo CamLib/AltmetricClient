@@ -54,6 +54,12 @@ class TestAltmetricFacadeCSVWriting:
         if os.path.isfile(authors_filepath):
             os.remove(authors_filepath)
 
+
+        subjects_filepath = '{0}{1}_subjects.csv'.format(_files_out_directory, _test_output_name_root)
+
+        if os.path.isfile(subjects_filepath):
+            os.remove(subjects_filepath)
+
         # Load the config from the project's config file. This is never pushed to GitHub,
         # so see the README about how to set one up
 
@@ -82,7 +88,7 @@ class TestAltmetricFacadeCSVWriting:
         self._test_master_output_file_path = '../files_out/test_bare_minimum_end_to_end_master.csv'
         self._test_mentions_output_file_path = '../files_out/test_bare_minimum_end_to_end_mentions.csv'
         self._test_authors_output_file_path = '../files_out/test_bare_minimum_end_to_end_authors.csv'
-
+        self._test_subjects_output_file_path = '../files_out/test_bare_minimum_end_to_end_subjects.csv'
 
     def test_csv_writing_end_to_end_writes_altmetric_id(self):
 
@@ -123,3 +129,15 @@ class TestAltmetricFacadeCSVWriting:
                 if row['author_id_on_source'] == 'youareinformed':
 
                     assert True
+
+    def test_subjects_contains_subject_medicine(self):
+
+        with open(self._test_subjects_output_file_path) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            for row in test_output_reader:
+
+                if row['doi'] == '10.1001/jama.2013.950' and row['subject_scheme'] == 'altmetric':
+
+                    assert row['subject_name'] == 'medicine'
