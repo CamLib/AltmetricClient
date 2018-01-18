@@ -5,6 +5,8 @@ from altmetric_client.output_writer_csv.csv_writer_facade import CSVWriterFacade
 from altmetric_client.altmetric import Altmetric
 from altmetric_client.mention import Mention
 from altmetric_client.author import Author
+from altmetric_client.subject import Subject
+
 
 class TestCSVWriterFacade:
 
@@ -16,6 +18,7 @@ class TestCSVWriterFacade:
         self.master_filepath = '{0}{1}_master.csv'.format(output_directory_name, test_file_root)
         self.mentions_filepath = '{0}{1}_mentions.csv'.format(output_directory_name, test_file_root)
         self.authors_filepath = '{0}{1}_authors.csv'.format(output_directory_name, test_file_root)
+        self.subjects_filepath = '{0}{1}_subjects.csv'.format(output_directory_name, test_file_root)
 
         # clean up the old test files in the setup
 
@@ -28,6 +31,9 @@ class TestCSVWriterFacade:
         if os.path.isfile(self.authors_filepath):
             os.remove(self.authors_filepath)
 
+        if os.path.isfile(self.subjects_filepath):
+            os.remove(self.subjects_filepath)
+
         test_altmetric = Altmetric()
         test_altmetric.altmetric_id = 1234
         test_altmetric.doi = "/Test/DOI/1234"
@@ -35,8 +41,11 @@ class TestCSVWriterFacade:
         test_mention = Mention()
         test_mention.related_article_doi = "/Test/DOI/1234"
         test_mention.url = "http://testurl1.com"
-
         test_altmetric.add_mention(test_mention)
+
+        test_subject = Subject()
+        test_subject.name = 'TestSubject'
+        test_altmetric.add_subject(test_subject)
 
         test_authors_list = []
         test_author = Author()
@@ -117,7 +126,32 @@ class TestCSVWriterFacade:
         self.test_csv_writer_facade.write(second_altmetric)
 
         out, err = capfd.readouterr()
-        assert out == '1 mentions successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
+        assert out == '1 mentions successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
+                      '0 subjects successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
+
+    def test_subject_written(self):
+
+        with open(self.subjects_filepath) as test_mentions_output_csv:
+
+            test_output_reader = DictReader(test_mentions_output_csv)
+            assert next(test_output_reader)['subject_name'] == 'TestSubject'
+
+    def test_console_writes_number_of_subjects_written(self, capfd):
+
+        second_altmetric = Altmetric()
+        second_altmetric.altmetric_id = 9876
+        second_altmetric.doi = '/Second/Test/DOI/5678'
+
+        second_subject = Subject()
+        second_subject.name = 'TestSubject2'
+
+        second_altmetric.add_subject(second_subject)
+
+        self.test_csv_writer_facade.write(second_altmetric)
+
+        out, err = capfd.readouterr()
+        assert out == '0 mentions successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
+                      '1 subjects successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
 
     def test_authors_written(self):
 

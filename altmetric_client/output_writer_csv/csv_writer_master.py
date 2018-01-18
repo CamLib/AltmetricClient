@@ -31,9 +31,12 @@ class CSVWriterMaster(CSVWriterBase):
 
         write_mode = self._get_write_mode(output_file_path)
 
-        fieldnames = ['doi', 'altmetric_id', 'altmetric_score', 'article_title', 'journal_title',
-                      'altmetric_journal_id','total_mentions', 'print_publication_date', 'first_seen_on_date',
-                      'first_author']
+        fieldnames = ['doi', 'altmetric_id', 'altmetric_score', 'type', 'article_title',
+                      'journal_title', 'journal_volume', 'journal_issue', 'page_starts', 'page_ends',
+                      'publisher', 'altmetric_journal_id', 'total_mentions',
+                      'print_publication_date','first_seen_on_date', 'last_mentioned_date',
+                      'first_author', 'pdf_url', 'uri', 'mendeley_url', 'poster_count_members_of_public',
+                      'poster_count_researcher', 'poster_count_practitioner', 'poster_count_science_communicator']
 
         try:
 
@@ -47,13 +50,27 @@ class CSVWriterMaster(CSVWriterBase):
                 output_dict = dict(doi=self.altmetric.doi,
                                    altmetric_id=self.altmetric.altmetric_id,
                                    altmetric_score=self.altmetric.altmetric_score,
+                                   type=self.altmetric.type,
                                    article_title=self.altmetric.article_title,
                                    journal_title=self.altmetric.journal_title,
+                                   journal_volume=self.altmetric.journal_volume,
+                                   journal_issue=self.altmetric.journal_issue,
+                                   page_starts=self.altmetric.page_starts,
+                                   page_ends=self.altmetric.page_ends,
+                                   publisher=self.altmetric.publisher,
                                    altmetric_journal_id=self.altmetric.altmetric_journal_id,
                                    total_mentions=self.altmetric.total_mentions,
                                    print_publication_date=self.altmetric.print_publication_date,
                                    first_seen_on_date=self.altmetric.first_seen_on_date,
-                                   first_author=self.altmetric.first_author)
+                                   last_mentioned_date=self.altmetric.last_mentioned_date,
+                                   first_author=self.altmetric.first_author,
+                                   pdf_url=self.altmetric.pdf_url,
+                                   uri=self.altmetric.uri,
+                                   mendeley_url=self.altmetric.mendeley_url,
+                                   poster_count_members_of_public=self.altmetric.poster_type_members_of_public_count,
+                                   poster_count_researcher=self.altmetric.poster_type_researcher_count,
+                                   poster_count_practitioner=self.altmetric.poster_type_practitioner_count,
+                                   poster_count_science_communicator=self.altmetric.poster_type_science_communicator_count)
 
                 output_writer.writerow(output_dict)
 

@@ -9,9 +9,9 @@ class TestAltmetricLoaderMentions:
 
     def setup_method(self):
 
-        self.mentionsJsonFile = open("json_data/101Mentions.json")
+        mentionsJsonFile = open("json_data/101Mentions.json")
 
-        test_data = json.load(self.mentionsJsonFile)
+        test_data = json.load(mentionsJsonFile)
 
         test_author_manager = AuthorManager()
         test_altmetric_loader = AltmetricLoader()
@@ -19,9 +19,7 @@ class TestAltmetricLoaderMentions:
 
         self.result = test_altmetric_loader.parse_result(test_data)
 
-    def tear_down_method(self):
-
-        self.mentionsJsonFile.close()
+        mentionsJsonFile.close()
 
     def test_adding_mention_article_doi(self):
 

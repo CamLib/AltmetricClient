@@ -2,6 +2,9 @@ from altmetric_client.altmetric import Altmetric
 from altmetric_client.mention import Mention
 from altmetric_client.author_manager import AuthorManager
 from altmetric_client.author import Author
+from altmetric_client.subject import Subject
+
+import time
 
 class AltmetricLoader:
 
@@ -11,10 +14,11 @@ class AltmetricLoader:
     wrap a decent set of tests around the whole process, too (which might come in handy if someone
     changes the Altmetric API in a way that breaks what we're trying to do with it)."""
 
-
     def __init__(self):
 
         self.__author_manager = None
+        self.__result = None
+
 
     @property
     def author_manager(self):
@@ -30,42 +34,170 @@ class AltmetricLoader:
 
     def parse_result(self, data=None):
 
+        self.__result = Altmetric()
+
         """Takes a data object based upon some Altmetric JSON and writes the fields we want 
         to a local Altmetric object"""
 
-        result = Altmetric()
-        result.altmetric_id = str(data["altmetric_id"])
-        result.altmetric_score = float(data["altmetric_score"]["score"])
+        self.__result.altmetric_id = str(data["altmetric_id"])
+        self.__result.altmetric_score = float(data["altmetric_score"]["score"])
+        self.__result.total_mentions = data["counts"]["total"]["posts_count"]
 
-        result.article_title = self._strip_breaks_and_spaces(data["citation"]["title"])
+        self._load_citation_data(data["citation"])
 
-        result.doi = str(data['citation']['doi'])
+        self._load_demographics(data["demographics"])
 
-        result.journal_title = data["citation"]["journal"]
+        self._load_mentions(data["posts"])
 
-        if 'altmetric_jid' not in data["citation"]:
+        return self.__result
 
-            result.altmetric_journal_id = 'N/A'
+    def _load_citation_data(self, citation_data):
 
-        else:
+        self.__result.article_title = self._strip_breaks_and_spaces(citation_data["title"])
+        self.__result.doi = str(citation_data['doi'])
+        self.__result.journal_title = citation_data["journal"]
 
-            result.altmetric_journal_id = data["citation"]["altmetric_jid"]
+        if 'altmetric_jid' not in citation_data:
 
-        result.total_mentions = data["counts"]["total"]["posts_count"]
-        result.print_publication_date = data["citation"]["pubdate"]
-        result.first_seen_on_date = data["citation"]["first_seen_on"]
-
-        if 'authors' not in data["citation"]:
-
-            result.first_author = 'N/A'
+            self.__result.altmetric_journal_id = 'NA'
 
         else:
 
-            result.first_author = self._find_first_author(data["citation"]["authors"])
+            self.__result.altmetric_journal_id = citation_data["altmetric_jid"]
 
-        result = self._load_mentions(result, data["posts"])
+        self.__result.print_publication_date = citation_data["pubdate"]
+        self.__result.first_seen_on_date = citation_data["first_seen_on"]
 
-        return result
+        if 'authors' not in citation_data:
+
+            self.__result.first_author = 'NA'
+
+        else:
+
+            self.__result.first_author = self._find_first_author(citation_data["authors"])
+
+        if 'startpage' not in citation_data:
+            self.__result.page_starts = 'NA'
+        else:
+            self.__result.page_starts = citation_data['startpage']
+
+        if 'endpage' not in citation_data:
+            self.__result.page_ends = 'NA'
+        else:
+            self.__result.page_ends = citation_data['endpage']
+
+        if 'volume' not in citation_data:
+            self.__result.journal_volume = 'NA'
+        else:
+            self.__result.journal_volume = citation_data['volume']
+
+        if 'issue' not in citation_data:
+            self.__result.journal_issue = 'NA'
+        else:
+            self.__result.journal_issue = citation_data['issue']
+
+        if 'last_mentioned_on' not in citation_data:
+            self.__result.last_mentioned_date = 'NA'
+        else:
+            self.__result.last_mentioned_date = time.strftime('%Y-%m-%dT%H:%M',
+                                                              time.localtime(citation_data['last_mentioned_on']))
+
+        if 'pdf_url' not in citation_data:
+            self.__result.pdf_url = "NA"
+        else:
+            self.__result.pdf_url = citation_data['pdf_url']
+
+        if 'publisher' not in citation_data:
+            self.__result.publisher = 'NA'
+        else:
+            self.__result.publisher = citation_data['publisher']
+
+        if 'type' not in citation_data:
+            self.__result.type = 'NA'
+        else:
+            self.__result.type = citation_data['type']
+
+        if 'uri' not in citation_data:
+            self.__result.uri = 'NA'
+        else:
+            self.__result.uri = citation_data['uri']
+
+        if 'mendeley_url' not in citation_data:
+            self.__result.mendeley_url = 'NA'
+        else:
+            self.__result.mendeley_url = citation_data['mendeley_url']
+
+        self._load_subjects(citation_data)
+
+    def _load_subjects(self, citation_data):
+
+        if 'subjects' in citation_data:
+
+            for subject in citation_data['subjects']:
+
+                altmetric_subject = Subject()
+                altmetric_subject.doi = self.__result.doi
+                altmetric_subject.scheme = 'altmetric'
+                altmetric_subject.name = subject
+                self.__result.add_subject(altmetric_subject)
+
+        if 'scopus_subjects' in citation_data:
+
+            for subject in citation_data['scopus_subjects']:
+
+                scopus_subject = Subject()
+                scopus_subject.doi = self.__result.doi
+                scopus_subject.scheme = 'scopus'
+                scopus_subject.name = subject
+                self.__result.add_subject(scopus_subject)
+
+        if 'publisher_subjects' in citation_data:
+
+            for subject in citation_data['publisher_subjects']:
+
+                publisher_subject = Subject()
+                publisher_subject.doi = self.__result.doi
+                publisher_subject.scheme = subject['scheme']
+                publisher_subject.name = subject['name']
+                self.__result.add_subject(publisher_subject)
+
+    def _load_demographics(self, demographics_data):
+
+        self.__result.poster_type_members_of_public_count = 0
+        self.__result.poster_type_researcher_count = 0
+        self.__result.poster_type_practitioner_count = 0
+        self.__result.poster_type_science_communicator_count = 0
+
+        if 'poster_types' not in demographics_data:
+
+            print("Article with DOI {0} did not have poster types demographic data."
+                  .format(self.__result.doi))
+
+        else:
+
+            for poster_type in demographics_data['poster_types']:
+
+                if poster_type == 'member_of_the_public':
+
+                    self.__result.poster_type_members_of_public_count = demographics_data['poster_types'][poster_type]
+
+                elif poster_type == 'researcher':
+
+                    self.__result.poster_type_researcher_count = demographics_data['poster_types'][poster_type]
+
+                elif poster_type == 'practitioner':
+
+                    self.__result.poster_type_practitioner_count = demographics_data['poster_types'][poster_type]
+
+                elif poster_type == 'science_communicator':
+
+                    self.__result.poster_type_science_communicator_count = demographics_data['poster_types'][poster_type]
+
+                else:
+
+                    print("Article with DOI {0} had an unexpected demographic poster_type of {1}"
+                          .format(self.__result.doi, poster_type))
+
 
     def _strip_breaks_and_spaces(self, broken_string):
 
@@ -93,7 +225,7 @@ class AltmetricLoader:
             else:
                 return first_value
 
-    def _load_mentions(self, result:Altmetric, posts_data):
+    def _load_mentions(self, posts_data):
 
         for source in posts_data:
 
@@ -109,23 +241,21 @@ class AltmetricLoader:
 
                     else:
 
-                        mention_author = self.__parse_author(altmetric_mention['author'], source)
+                        mention_author = self._parse_author(altmetric_mention['author'], source)
                         mention.author_id = self.__author_manager.add_author(mention_author)
 
                     mention.source = str(source)
-                    mention.related_article_doi = result.doi
+                    mention.related_article_doi = self.__result.doi
                     mention.url = altmetric_mention['url']
                     mention.date_posted = altmetric_mention['posted_on']
-                    result.add_mention(mention)
+                    self.__result.add_mention(mention)
 
             except:
 
                 print("An error occurred when processing mentions for source: {0}, article DOI: {1}".format(str(source),
-                        result.doi))
+                        self.__result.doi))
 
-        return result
-
-    def __parse_author(self, author_data, source):
+    def _parse_author(self, author_data, source):
 
         author = Author()
 
