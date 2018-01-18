@@ -4,9 +4,9 @@ library(tidyverse)
 
 # load an authors file
 
-authors <- read_csv("../files_out/20171205_0734_authors.csv")
-mentions <- read_csv("../files_out/20171205_0734_mentions.csv")
-articles <- read_csv("../files_out/20171205_0734_master.csv")
+authors <- read_csv("../files_out/20180118_0733_authors.csv")
+mentions <- read_csv("../files_out/20180118_0733_mentions.csv")
+articles <- read_csv("../files_out/20180118_0733_master.csv")
 
 # articles %>% View()
 # mentions %>% View()
