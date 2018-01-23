@@ -2,7 +2,7 @@ class Mention:
 
     def __init__(self):
 
-        self.__related_article_doi = None
+        self.doi = None
         self.__source = None
         self.__url = None
         self.__date_posted = None
@@ -11,11 +11,11 @@ class Mention:
     @property
     def related_article_doi(self):
 
-        return self.__related_article_doi
+        return self.doi
 
     @related_article_doi.setter
     def related_article_doi(self, related_article_doi):
-        self.__related_article_doi = related_article_doi
+        self.doi = related_article_doi
 
     @property
     def source(self):

@@ -29,3 +29,8 @@ summarise(articles, IQR(total_mentions))
 filter(articles, total_mentions == 10) %>% 
   arrange(desc(total_mentions)) %>% 
   View()
+
+# Orders articles by count of member of public posters
+
+arrange(articles, desc(poster_count_members_of_public)) %>%
+  View()
