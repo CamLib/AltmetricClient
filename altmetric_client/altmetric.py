@@ -1,5 +1,6 @@
 from altmetric_client.mention import Mention
 from altmetric_client.subject import Subject
+from altmetric_client.user_demographics import UserDemographics
 
 class Altmetric:
 
@@ -32,6 +33,7 @@ class Altmetric:
 
         self.__mentions = []
         self.__subjects = []
+        self.__user_demographics = []
 
     @property
     def doi(self):
@@ -238,5 +240,12 @@ class Altmetric:
 
     def add_subject(self, subject: Subject):
         self.__subjects.append(subject)
+
+    @property
+    def user_demographics(self):
+        return self.__user_demographics
+
+    def add_user_demographics(self, user_demographics: UserDemographics):
+        self.__user_demographics.append(user_demographics)
 
 

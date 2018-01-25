@@ -3,6 +3,7 @@ from altmetric_client.mention import Mention
 from altmetric_client.author_manager import AuthorManager
 from altmetric_client.author import Author
 from altmetric_client.subject import Subject
+from altmetric_client.user_demographics import UserDemographics
 
 import time
 
@@ -163,41 +164,87 @@ class AltmetricLoader:
 
     def _load_demographics(self, demographics_data):
 
+        if 'poster_types' not in demographics_data:
+
+            print("Article with DOI {0} did not have poster types demographic data."
+                  .format(self.__result.doi))
+        else:
+
+            self._load_poster_types(demographics_data['poster_types'])
+
+        if 'users' not in demographics_data:
+
+            print("Article with DOI {0} did not have user demographics data."
+                  .format(self.__result.doi))
+        else:
+
+            self._load_user_demographics(demographics_data['users'])
+
+    def _load_poster_types(self, poster_types_data):
+
         self.__result.poster_type_members_of_public_count = 0
         self.__result.poster_type_researcher_count = 0
         self.__result.poster_type_practitioner_count = 0
         self.__result.poster_type_science_communicator_count = 0
 
-        if 'poster_types' not in demographics_data:
+        for poster_type in poster_types_data:
 
-            print("Article with DOI {0} did not have poster types demographic data."
-                  .format(self.__result.doi))
+            if poster_type == 'member_of_the_public':
 
-        else:
+                self.__result.poster_type_members_of_public_count = poster_types_data[poster_type]
 
-            for poster_type in demographics_data['poster_types']:
+            elif poster_type == 'researcher':
 
-                if poster_type == 'member_of_the_public':
+                self.__result.poster_type_researcher_count = poster_types_data[poster_type]
 
-                    self.__result.poster_type_members_of_public_count = demographics_data['poster_types'][poster_type]
+            elif poster_type == 'practitioner':
 
-                elif poster_type == 'researcher':
+                self.__result.poster_type_practitioner_count = poster_types_data[poster_type]
 
-                    self.__result.poster_type_researcher_count = demographics_data['poster_types'][poster_type]
+            elif poster_type == 'science_communicator':
 
-                elif poster_type == 'practitioner':
+                self.__result.poster_type_science_communicator_count = poster_types_data[poster_type]
 
-                    self.__result.poster_type_practitioner_count = demographics_data['poster_types'][poster_type]
+            else:
 
-                elif poster_type == 'science_communicator':
-
-                    self.__result.poster_type_science_communicator_count = demographics_data['poster_types'][poster_type]
-
-                else:
-
-                    print("Article with DOI {0} had an unexpected demographic poster_type of {1}"
+                print("Article with DOI {0} had an unexpected demographic poster_type of {1}"
                           .format(self.__result.doi, poster_type))
 
+    def _load_user_demographics(self, user_demographics_data):
+
+        twitter_demographics = user_demographics_data['twitter']
+
+        for cohort in twitter_demographics['cohorts']:
+
+            twitter_cohort_demographics = UserDemographics()
+            twitter_cohort_demographics.doi = self.__result.doi
+            twitter_cohort_demographics.source = 'twitter'
+            twitter_cohort_demographics.group_type = 'cohort'
+            twitter_cohort_demographics.group_value = cohort
+            twitter_cohort_demographics.total = twitter_demographics['cohorts'][cohort]
+            self.__result.add_user_demographics(twitter_cohort_demographics)
+
+        mendeley_demographics = user_demographics_data['mendeley']
+
+        for mendeley_status_demographic in mendeley_demographics['by_status']:
+
+            mendeley_by_status_demographic = UserDemographics()
+            mendeley_by_status_demographic.doi = self.__result.doi
+            mendeley_by_status_demographic.source = 'mendeley'
+            mendeley_by_status_demographic.group_type = 'by_status'
+            mendeley_by_status_demographic.group_value = mendeley_status_demographic
+            mendeley_by_status_demographic.total = mendeley_demographics['by_status'][mendeley_status_demographic]
+            self.__result.add_user_demographics(mendeley_by_status_demographic)
+
+        for mendeley_discipline_demographic in mendeley_demographics['by_discipline']:
+
+            mendeley_by_discipline_demographic = UserDemographics()
+            mendeley_by_discipline_demographic.doi = self.__result.doi
+            mendeley_by_discipline_demographic.source = 'mendeley'
+            mendeley_by_discipline_demographic.group_type = 'by_discipline'
+            mendeley_by_discipline_demographic.group_value = mendeley_discipline_demographic
+            mendeley_by_discipline_demographic.total = mendeley_demographics['by_discipline'][mendeley_discipline_demographic]
+            self.__result.add_user_demographics(mendeley_by_discipline_demographic)
 
     def _strip_breaks_and_spaces(self, broken_string):
 

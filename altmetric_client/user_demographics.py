@@ -1,4 +1,4 @@
-class DemographicUsers:
+class UserDemographics:
 
     def __init__(self):
 
