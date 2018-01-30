@@ -89,6 +89,7 @@ class TestAltmetricFacadeCSVWriting:
         self._test_mentions_output_file_path = '../files_out/test_bare_minimum_end_to_end_mentions.csv'
         self._test_authors_output_file_path = '../files_out/test_bare_minimum_end_to_end_authors.csv'
         self._test_subjects_output_file_path = '../files_out/test_bare_minimum_end_to_end_subjects.csv'
+        self._test_user_demographics_output_file_path = '../files_out/test_bare_minimum_end_to_end_user_demographics.csv'
 
     def test_csv_writing_end_to_end_writes_altmetric_id(self):
 
@@ -141,3 +142,15 @@ class TestAltmetricFacadeCSVWriting:
                 if row['doi'] == '10.1001/jama.2013.950' and row['subject_scheme'] == 'altmetric':
 
                     assert row['subject_name'] == 'medicine'
+
+    def test_user_demographics_contains_mendeley_by_status_other(self):
+
+        with open(self._test_user_demographics_output_file_path) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            for row in test_output_reader:
+
+                if row['doi'] == '10.1001/jama.2013.950' and row['demographic_source'] == 'mendeley' and row['demographic_group_type'] == 'by_status' and row['demographic_group_value'] == 'Other':
+
+                    assert row['demographic_total'] == '5'

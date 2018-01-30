@@ -3,6 +3,7 @@ from altmetric_client.output_writer_csv.csv_writer_master import CSVWriterMaster
 from altmetric_client.output_writer_csv.csv_writer_mentions import CSVWriterMention
 from altmetric_client.output_writer_csv.csv_writer_author import CSVWriterAuthor
 from altmetric_client.output_writer_csv.csv_writer_subject import CSVWriterSubject
+from altmetric_client.output_writer_csv.csv_writer_user_demographics import CSVWriterUserDemographics
 
 
 class CSVWriterFacade:
@@ -15,6 +16,7 @@ class CSVWriterFacade:
         self.__csv_master_writer = CSVWriterMaster('{0}_master.csv'.format(output_files_root), output_directory_name)
         self.__csv_mentions_writer = CSVWriterMention('{0}_mentions.csv'.format(output_files_root), output_directory_name)
         self.__csv_subjects_writer = CSVWriterSubject('{0}_subjects.csv'.format(output_files_root), output_directory_name)
+        self.__csv_user_demographics_writer = CSVWriterUserDemographics('{0}_user_demographics.csv'.format(output_files_root), output_directory_name)
         self.__csv_authors_writer = CSVWriterAuthor('{0}_authors.csv'.format(output_files_root), output_directory_name)
 
     @property
@@ -47,6 +49,12 @@ class CSVWriterFacade:
         self.__csv_subjects_writer.write_subjects()
 
         print('{0} subjects successfully written for altmetric with DOI {1}'.format(len(altmetric.subjects),
+                                                                                    altmetric.doi))
+
+        self.__csv_user_demographics_writer.user_demographics_list = altmetric.user_demographics
+        self.__csv_user_demographics_writer.write_user_demographics()
+
+        print('{0} user demographics successfully written for altmetric with DOI {1}'.format(len(altmetric.user_demographics),
                                                                                     altmetric.doi))
 
     def write_authors(self, authors_list):
