@@ -1,4 +1,4 @@
-class GeoDemograhics:
+class GeoDemographics:
 
     def __init__(self):
 

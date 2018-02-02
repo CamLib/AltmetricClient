@@ -1,6 +1,5 @@
 from altmetric_client.altmetric_loader import AltmetricLoader
 from altmetric_client.author_manager import AuthorManager
-from altmetric_client.user_demographics import UserDemographics
 
 import json
 

@@ -4,6 +4,7 @@ from altmetric_client.author_manager import AuthorManager
 from altmetric_client.author import Author
 from altmetric_client.subject import Subject
 from altmetric_client.user_demographics import UserDemographics
+from altmetric_client.geo_demographics import GeoDemographics
 
 import time
 
@@ -180,6 +181,15 @@ class AltmetricLoader:
 
             self._load_user_demographics(demographics_data['users'])
 
+        if 'geo' not in demographics_data:
+
+            print("Article with DOI {0} did not have geo demographics data."
+                  .format(self.__result.doi))
+
+        else:
+
+            self._load_geo_demographics(demographics_data['geo'])
+
     def _load_poster_types(self, poster_types_data):
 
         self.__result.poster_type_members_of_public_count = 0
@@ -212,39 +222,79 @@ class AltmetricLoader:
 
     def _load_user_demographics(self, user_demographics_data):
 
-        twitter_demographics = user_demographics_data['twitter']
+        if 'twitter' not in user_demographics_data:
+            print('Article with DOI {0} did not have user demographics data from Twitter.'.format(self.__result.doi))
+        else:
 
-        for cohort in twitter_demographics['cohorts']:
+            twitter_demographics = user_demographics_data['twitter']
 
-            twitter_cohort_demographics = UserDemographics()
-            twitter_cohort_demographics.doi = self.__result.doi
-            twitter_cohort_demographics.source = 'twitter'
-            twitter_cohort_demographics.group_type = 'cohort'
-            twitter_cohort_demographics.group_value = cohort
-            twitter_cohort_demographics.total = twitter_demographics['cohorts'][cohort]
-            self.__result.add_user_demographics(twitter_cohort_demographics)
+            for cohort in twitter_demographics['cohorts']:
 
-        mendeley_demographics = user_demographics_data['mendeley']
+                twitter_cohort_demographics = UserDemographics()
+                twitter_cohort_demographics.doi = self.__result.doi
+                twitter_cohort_demographics.source = 'twitter'
+                twitter_cohort_demographics.group_type = 'cohort'
+                twitter_cohort_demographics.group_value = cohort
+                twitter_cohort_demographics.total = twitter_demographics['cohorts'][cohort]
+                self.__result.add_user_demographics(twitter_cohort_demographics)
 
-        for mendeley_status_demographic in mendeley_demographics['by_status']:
+        if 'mendeley' not in user_demographics_data:
+            print('Article with DOI {0} did not have user demographics data from Mendeley.'.format(self.__result.doi))
+        else:
 
-            mendeley_by_status_demographic = UserDemographics()
-            mendeley_by_status_demographic.doi = self.__result.doi
-            mendeley_by_status_demographic.source = 'mendeley'
-            mendeley_by_status_demographic.group_type = 'by_status'
-            mendeley_by_status_demographic.group_value = mendeley_status_demographic
-            mendeley_by_status_demographic.total = mendeley_demographics['by_status'][mendeley_status_demographic]
-            self.__result.add_user_demographics(mendeley_by_status_demographic)
+            mendeley_demographics = user_demographics_data['mendeley']
 
-        for mendeley_discipline_demographic in mendeley_demographics['by_discipline']:
+            for mendeley_status_demographic in mendeley_demographics['by_status']:
 
-            mendeley_by_discipline_demographic = UserDemographics()
-            mendeley_by_discipline_demographic.doi = self.__result.doi
-            mendeley_by_discipline_demographic.source = 'mendeley'
-            mendeley_by_discipline_demographic.group_type = 'by_discipline'
-            mendeley_by_discipline_demographic.group_value = mendeley_discipline_demographic
-            mendeley_by_discipline_demographic.total = mendeley_demographics['by_discipline'][mendeley_discipline_demographic]
-            self.__result.add_user_demographics(mendeley_by_discipline_demographic)
+                mendeley_by_status_demographic = UserDemographics()
+                mendeley_by_status_demographic.doi = self.__result.doi
+                mendeley_by_status_demographic.source = 'mendeley'
+                mendeley_by_status_demographic.group_type = 'by_status'
+                mendeley_by_status_demographic.group_value = mendeley_status_demographic
+                mendeley_by_status_demographic.total = mendeley_demographics['by_status'][mendeley_status_demographic]
+                self.__result.add_user_demographics(mendeley_by_status_demographic)
+
+            for mendeley_discipline_demographic in mendeley_demographics['by_discipline']:
+
+                mendeley_by_discipline_demographic = UserDemographics()
+                mendeley_by_discipline_demographic.doi = self.__result.doi
+                mendeley_by_discipline_demographic.source = 'mendeley'
+                mendeley_by_discipline_demographic.group_type = 'by_discipline'
+                mendeley_by_discipline_demographic.group_value = mendeley_discipline_demographic
+                mendeley_by_discipline_demographic.total = mendeley_demographics['by_discipline'][mendeley_discipline_demographic]
+                self.__result.add_user_demographics(mendeley_by_discipline_demographic)
+
+    def _load_geo_demographics(self, geo_demographics_data):
+
+        if 'twitter' not in geo_demographics_data:
+            print('Article with DOI {0} did not have geo demographics data from Twitter.'.format(self.__result.doi))
+
+        else:
+
+            twitter_geo_demographics = geo_demographics_data['twitter']
+
+            for twitter_geo_demographic_data in twitter_geo_demographics:
+
+                twitter_geo_demographic = GeoDemographics()
+                twitter_geo_demographic.doi = self.__result.doi
+                twitter_geo_demographic.source = 'twitter'
+                twitter_geo_demographic.country_code = twitter_geo_demographic_data
+                twitter_geo_demographic.total = twitter_geo_demographics[twitter_geo_demographic_data]
+                self.__result.add_geo_demographics(twitter_geo_demographic)
+
+        if 'mendeley' not in geo_demographics_data:
+            print('Article with DOI {0} did not have geo demographics data from Mendeley.'.format(self.__result.doi))
+        else:
+            mendeley_geo_demographics = geo_demographics_data['mendeley']
+
+            for mendeley_geo_demographic_data in mendeley_geo_demographics:
+
+                mendeley_geo_demographic = GeoDemographics()
+                mendeley_geo_demographic.doi = self.__result.doi
+                mendeley_geo_demographic.source = 'mendeley'
+                mendeley_geo_demographic.country_code = mendeley_geo_demographic_data
+                mendeley_geo_demographic.total = mendeley_geo_demographics[mendeley_geo_demographic_data]
+                self.__result.add_geo_demographics(mendeley_geo_demographic)
 
     def _strip_breaks_and_spaces(self, broken_string):
 
