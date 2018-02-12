@@ -54,11 +54,20 @@ class TestAltmetricFacadeCSVWriting:
         if os.path.isfile(authors_filepath):
             os.remove(authors_filepath)
 
-
         subjects_filepath = '{0}{1}_subjects.csv'.format(_files_out_directory, _test_output_name_root)
 
         if os.path.isfile(subjects_filepath):
             os.remove(subjects_filepath)
+
+        user_demographics_filepath = '{0}{1}_user_demographics.csv'.format(_files_out_directory, _test_output_name_root)
+
+        if os.path.isfile(user_demographics_filepath):
+            os.remove(user_demographics_filepath)
+
+        geo_demographics_filepath = '{0}{1}_geo_demographics.csv'.format(_files_out_directory, _test_output_name_root)
+
+        if os.path.isfile(geo_demographics_filepath):
+            os.remove(geo_demographics_filepath)
 
         # Load the config from the project's config file. This is never pushed to GitHub,
         # so see the README about how to set one up
@@ -90,6 +99,7 @@ class TestAltmetricFacadeCSVWriting:
         self._test_authors_output_file_path = '../files_out/test_bare_minimum_end_to_end_authors.csv'
         self._test_subjects_output_file_path = '../files_out/test_bare_minimum_end_to_end_subjects.csv'
         self._test_user_demographics_output_file_path = '../files_out/test_bare_minimum_end_to_end_user_demographics.csv'
+        self._test_geo_demographics_output_file_path = '../files_out/test_bare_minimum_end_to_end_geo_demographics.csv'
 
     def test_csv_writing_end_to_end_writes_altmetric_id(self):
 
@@ -154,3 +164,15 @@ class TestAltmetricFacadeCSVWriting:
                 if row['doi'] == '10.1001/jama.2013.950' and row['demographic_source'] == 'mendeley' and row['demographic_group_type'] == 'by_status' and row['demographic_group_value'] == 'Other':
 
                     assert row['demographic_total'] == '5'
+
+    def test_geo_demographics_contains_twitter_canada_count_of_3(self):
+
+        with open(self._test_geo_demographics_output_file_path) as test_output_csv:
+
+            test_output_reader = DictReader(test_output_csv)
+
+            for row in test_output_reader:
+
+                if row['doi'] == '10.1001/jama.2013.950' and row['geo_demographic_source'] == 'twitter' and row['country_code'] == 'CA':
+
+                    assert row['geo_demographic_total'] == '7'
