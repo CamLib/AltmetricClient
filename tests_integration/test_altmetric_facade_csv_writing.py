@@ -175,4 +175,4 @@ class TestAltmetricFacadeCSVWriting:
 
                 if row['doi'] == '10.1001/jama.2013.950' and row['geo_demographic_source'] == 'twitter' and row['country_code'] == 'CA':
 
-                    assert row['geo_demographic_total'] == '7'
+                    assert row['geo_demographic_total'] == '3'
