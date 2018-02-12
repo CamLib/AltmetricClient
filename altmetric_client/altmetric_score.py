@@ -1,4 +1,5 @@
 from altmetric_client.altmetric_score_context import AltmetricScoreContext
+from altmetric_client.altmetric_score_history import AltmetricScoreHistory
 
 class AltmetricScore:
 
@@ -30,7 +31,7 @@ class AltmetricScore:
         return self.__score_history
 
     @score_history.setter
-    def score_history(self, score_history):
+    def score_history(self, score_history: AltmetricScoreHistory):
         self.__score_history = score_history
 
     @property
