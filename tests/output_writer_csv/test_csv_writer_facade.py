@@ -7,6 +7,7 @@ from altmetric_client.mention import Mention
 from altmetric_client.author import Author
 from altmetric_client.subject import Subject
 from altmetric_client.user_demographics import UserDemographics
+from altmetric_client.geo_demographics import GeoDemographics
 
 class TestCSVWriterFacade:
 
@@ -20,6 +21,7 @@ class TestCSVWriterFacade:
         self.authors_filepath = '{0}{1}_authors.csv'.format(output_directory_name, test_file_root)
         self.subjects_filepath = '{0}{1}_subjects.csv'.format(output_directory_name, test_file_root)
         self.user_demographics_filepath = '{0}{1}_user_demographics.csv'.format(output_directory_name, test_file_root)
+        self.geo_demographics_filepath = '{0}{1}_geo_demographics.csv'.format(output_directory_name, test_file_root)
 
         # clean up the old test files in the setup
 
@@ -38,6 +40,9 @@ class TestCSVWriterFacade:
         if os.path.isfile(self.user_demographics_filepath):
             os.remove(self.user_demographics_filepath)
 
+        if os.path.isfile(self.geo_demographics_filepath):
+            os.remove(self.geo_demographics_filepath)
+
         test_altmetric = Altmetric()
         test_altmetric.altmetric_id = 1234
         test_altmetric.doi = "/Test/DOI/1234"
@@ -54,6 +59,10 @@ class TestCSVWriterFacade:
         test_user_demographics = UserDemographics()
         test_user_demographics.group_value = 'Test Demographic Group Value'
         test_altmetric.add_user_demographics(test_user_demographics)
+
+        test_geo_demographics = GeoDemographics()
+        test_geo_demographics.country_code = 'TEST1'
+        test_altmetric.add_geo_demographics(test_geo_demographics)
 
         test_authors_list = []
         test_author = Author()
@@ -141,12 +150,18 @@ class TestCSVWriterFacade:
 
         second_altmetric.add_user_demographics(second_user_demographic)
 
+        second_geo_demographic = GeoDemographics()
+        second_geo_demographic.source = 'Test source'
+
+        second_altmetric.add_geo_demographics(second_geo_demographic)
+
         self.test_csv_writer_facade.write(second_altmetric)
 
         out, err = capfd.readouterr()
         assert out == '1 mentions successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
                       '1 subjects successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
-                      '1 user demographics successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
+                      '1 user demographics successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
+                      '1 geo demographics successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
 
     def test_subject_written(self):
 
@@ -161,6 +176,13 @@ class TestCSVWriterFacade:
 
             test_output_reader = DictReader(test_user_demographics_output_csv)
             assert next(test_output_reader)['demographic_group_value'] == 'Test Demographic Group Value'
+
+    def test_geo_demographics_written(self):
+
+        with open(self.geo_demographics_filepath) as test_geo_demographics_output_csv:
+
+            test_output_reader = DictReader(test_geo_demographics_output_csv)
+            assert next(test_output_reader)['country_code'] == 'TEST1'
 
     def test_authors_written(self):
 
