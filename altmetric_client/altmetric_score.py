@@ -8,7 +8,10 @@ class AltmetricScore:
         self.__doi = None
         self.__total_score = None
         self.__score_history = None
-        self.__score_context = []
+        self.__context_all = None
+        self.__context_similar_age_three_months = None
+        self.__context_this_journal = None
+        self.__context_similar_age_this_journal_three_months = None
 
     @property
     def doi(self):
@@ -35,8 +38,33 @@ class AltmetricScore:
         self.__score_history = score_history
 
     @property
-    def score_context(self):
-        return self.__score_context
+    def context_all(self):
+        return self.__context_all
 
-    def add_score_context(self, score_context:AltmetricScoreContext):
-        self.__score_context.append(score_context)
+    @context_all.setter
+    def context_all(self, context_all: AltmetricScoreContext):
+        self.__context_all = context_all
+
+    @property
+    def context_similar_age_three_months(self):
+        return self.__context_similar_age_three_months
+
+    @context_similar_age_three_months.setter
+    def context_similar_age_three_months(self, similar_age_three_months: AltmetricScoreContext):
+        self.__context_similar_age_three_months = similar_age_three_months
+
+    @property
+    def context_this_journal(self):
+        return self.__context_this_journal
+
+    @context_this_journal.setter
+    def context_this_journal(self, context_this_journal: AltmetricScoreContext):
+        self.__context_this_journal = context_this_journal
+
+    @property
+    def context_similar_age_this_journal_three_months(self):
+        return self.__context_similar_age_this_journal_three_months
+
+    @context_similar_age_this_journal_three_months.setter
+    def context_similar_age_this_journal_three_months(self, context_similar_age_this_journal_three_months: AltmetricScoreContext):
+        self.__context_similar_age_this_journal_three_months = context_similar_age_this_journal_three_months

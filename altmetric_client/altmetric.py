@@ -2,6 +2,7 @@ from altmetric_client.mention import Mention
 from altmetric_client.subject import Subject
 from altmetric_client.user_demographics import UserDemographics
 from altmetric_client.geo_demographics import GeoDemographics
+from altmetric_client.altmetric_score import AltmetricScore
 
 class Altmetric:
 
@@ -31,6 +32,8 @@ class Altmetric:
         self.__poster_type_researcher_count = None
         self.__poster_type_practitioner_count = None
         self.__poster_type_science_communicator_count = None
+
+        self.__scores = None
 
         self.__mentions = []
         self.__subjects = []
@@ -228,6 +231,14 @@ class Altmetric:
     @poster_type_science_communicator_count.setter
     def poster_type_science_communicator_count(self, poster_type_science_communicator_count):
         self.__poster_type_science_communicator_count = poster_type_science_communicator_count
+
+    @property
+    def scores(self):
+        return self.__scores
+
+    @scores.setter
+    def scores(self, scores: AltmetricScore):
+        self.__scores = scores
 
     @property
     def mentions(self):

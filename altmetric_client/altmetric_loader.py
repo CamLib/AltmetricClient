@@ -1,4 +1,7 @@
 from altmetric_client.altmetric import Altmetric
+from altmetric_client.altmetric_score import AltmetricScore
+from altmetric_client.altmetric_score_context import AltmetricScoreContext
+from altmetric_client.altmetric_score_history import AltmetricScoreHistory
 from altmetric_client.mention import Mention
 from altmetric_client.author_manager import AuthorManager
 from altmetric_client.author import Author
@@ -46,6 +49,8 @@ class AltmetricLoader:
         self.__result.total_mentions = data["counts"]["total"]["posts_count"]
 
         self._load_citation_data(data["citation"])
+
+        self._load_scores(data["altmetric_score"])
 
         self._load_demographics(data["demographics"])
 
@@ -130,6 +135,52 @@ class AltmetricLoader:
             self.__result.mendeley_url = citation_data['mendeley_url']
 
         self._load_subjects(citation_data)
+
+    def _load_scores(self, scores_data):
+
+        scores = AltmetricScore()
+        scores.total_score = scores_data["score"]
+
+        scores.score_history = self._load_score_history(scores_data["score_history"])
+
+        context_data = scores_data["context_for_score"]
+
+        scores.context_all = self._load_score_context(context_data["all"])
+        scores.context_similar_age_three_months = self._load_score_context(context_data["similar_age_3m"])
+        scores.context_this_journal = self._load_score_context(context_data["this_journal"])
+        scores.context_similar_age_this_journal_three_months = self._load_score_context(context_data["similar_age_this_journal_3m"])
+
+        self.__result.scores = scores
+
+    def _load_score_history(self, score_history_data):
+
+        score_history = AltmetricScoreHistory()
+        score_history.last_one_year = score_history_data["1y"]
+        score_history.last_six_months = score_history_data["6m"]
+        score_history.last_three_months = score_history_data["3m"]
+        score_history.last_one_month = score_history_data["1m"]
+        score_history.last_one_week = score_history_data["1w"]
+        score_history.last_six_days = score_history_data["6d"]
+        score_history.last_five_days = score_history_data["5d"]
+        score_history.last_four_days = score_history_data["4d"]
+        score_history.last_three_days = score_history_data["3d"]
+        score_history.last_two_days = score_history_data["2d"]
+        score_history.last_one_day = score_history_data["1d"]
+
+        return score_history
+
+    def _load_score_context(self, context_data):
+
+        context = AltmetricScoreContext()
+        context.total_number_of_other_articles = context_data["total_number_of_other_articles"]
+        context.mean = context_data["mean"]
+        context.rank = context_data["rank"]
+        context.this_scored_higher_than_pct = context_data["this_scored_higher_than_pct"]
+        context.this_scored_higher_than = context_data["this_scored_higher_than"]
+        context.rank_type = context_data["rank_type"]
+        context.percentile = context_data["percentile"]
+
+        return context
 
     def _load_subjects(self, citation_data):
 

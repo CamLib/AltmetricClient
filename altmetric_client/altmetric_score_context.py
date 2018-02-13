@@ -57,7 +57,7 @@ class AltmetricScoreContext:
 
     @this_scored_higher_than.setter
     def this_scored_higher_than(self, this_scored_higher_than):
-        self.this_scored_higher_than = this_scored_higher_than
+        self.__this_scored_higher_than = this_scored_higher_than
 
     @property
     def rank_type(self):
