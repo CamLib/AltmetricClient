@@ -2,7 +2,6 @@ class AltmetricScoreContext:
 
     def __init__(self):
 
-        self.__context_type = None
         self.__total_no_of_other_articles = None
         self.__mean = None
         self.__rank = None
@@ -10,14 +9,6 @@ class AltmetricScoreContext:
         self.__this_scored_higher_than = None
         self.__rank_type = None
         self.__percentile = None
-
-    @property
-    def context_type(self):
-        return self.__context_type
-
-    @context_type.setter
-    def context_type(self, context_type):
-        self.__context_type = context_type
 
     @property
     def total_number_of_other_articles(self):
