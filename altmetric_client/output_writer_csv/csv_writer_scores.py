@@ -19,7 +19,7 @@ class CSVWriterScores(CSVWriterBase):
 
     @altmetric_scores.setter
     def altmetric_scores(self, altmetric_scores: AltmetricScore):
-        self.altmetric_scores = altmetric_scores
+        self.__altmetric_scores = altmetric_scores
 
     def write_scores(self):
 

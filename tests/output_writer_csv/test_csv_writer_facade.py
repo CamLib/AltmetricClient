@@ -8,6 +8,9 @@ from altmetric_client.author import Author
 from altmetric_client.subject import Subject
 from altmetric_client.user_demographics import UserDemographics
 from altmetric_client.geo_demographics import GeoDemographics
+from altmetric_client.altmetric_score import AltmetricScore
+from altmetric_client.altmetric_score_context import AltmetricScoreContext
+from altmetric_client.altmetric_score_history import AltmetricScoreHistory
 
 class TestCSVWriterFacade:
 
@@ -22,6 +25,7 @@ class TestCSVWriterFacade:
         self.subjects_filepath = '{0}{1}_subjects.csv'.format(output_directory_name, test_file_root)
         self.user_demographics_filepath = '{0}{1}_user_demographics.csv'.format(output_directory_name, test_file_root)
         self.geo_demographics_filepath = '{0}{1}_geo_demographics.csv'.format(output_directory_name, test_file_root)
+        self.scores_filepath = '{0}{1}_scores.csv'.format(output_directory_name, test_file_root)
 
         # clean up the old test files in the setup
 
@@ -43,6 +47,9 @@ class TestCSVWriterFacade:
         if os.path.isfile(self.geo_demographics_filepath):
             os.remove(self.geo_demographics_filepath)
 
+        if os.path.isfile(self.scores_filepath):
+            os.remove(self.scores_filepath)
+
         test_altmetric = Altmetric()
         test_altmetric.altmetric_id = 1234
         test_altmetric.doi = "/Test/DOI/1234"
@@ -63,6 +70,31 @@ class TestCSVWriterFacade:
         test_geo_demographics = GeoDemographics()
         test_geo_demographics.country_code = 'TEST1'
         test_altmetric.add_geo_demographics(test_geo_demographics)
+
+        test_scores = AltmetricScore()
+        test_scores.total_score = 1234
+
+        test_score_history = AltmetricScoreHistory()
+        test_score_history.last_one_year = 20
+        test_scores.score_history = test_score_history
+
+        test_context_all = AltmetricScoreContext()
+        test_context_all.total_number_of_other_articles = 50
+        test_scores.context_all = test_context_all
+
+        test_context_3m = AltmetricScoreContext()
+        test_context_3m.total_number_of_other_articles = 40
+        test_scores.context_similar_age_three_months = test_context_3m
+
+        test_context_tj = AltmetricScoreContext()
+        test_context_tj.total_number_of_other_articles = 30
+        test_scores.context_this_journal = test_context_tj
+
+        test_context_3mtj = AltmetricScoreContext()
+        test_context_3mtj.total_number_of_other_articles = 20
+        test_scores.context_similar_age_this_journal_three_months = test_context_3mtj
+
+        test_altmetric.scores = test_scores
 
         test_authors_list = []
         test_author = Author()
@@ -155,13 +187,39 @@ class TestCSVWriterFacade:
 
         second_altmetric.add_geo_demographics(second_geo_demographic)
 
+        test_scores = AltmetricScore()
+        test_scores.total_score = 1234
+
+        test_score_history = AltmetricScoreHistory()
+        test_score_history.last_one_year = 20
+        test_scores.score_history = test_score_history
+
+        test_context_all = AltmetricScoreContext()
+        test_context_all.total_number_of_other_articles = 50
+        test_scores.context_all = test_context_all
+
+        test_context_3m = AltmetricScoreContext()
+        test_context_3m.total_number_of_other_articles = 40
+        test_scores.context_similar_age_three_months = test_context_3m
+
+        test_context_tj = AltmetricScoreContext()
+        test_context_tj.total_number_of_other_articles = 30
+        test_scores.context_this_journal = test_context_tj
+
+        test_context_3mtj = AltmetricScoreContext()
+        test_context_3mtj.total_number_of_other_articles = 20
+        test_scores.context_similar_age_this_journal_three_months = test_context_3mtj
+
+        second_altmetric.scores = test_scores
+
         self.test_csv_writer_facade.write(second_altmetric)
 
         out, err = capfd.readouterr()
         assert out == '1 mentions successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
                       '1 subjects successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
                       '1 user demographics successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
-                      '1 geo demographics successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
+                      '1 geo demographics successfully written for altmetric with DOI /Second/Test/DOI/5678\n' \
+                      'Scores successfully written for altmetric with DOI /Second/Test/DOI/5678\n'
 
     def test_subject_written(self):
 
@@ -183,6 +241,13 @@ class TestCSVWriterFacade:
 
             test_output_reader = DictReader(test_geo_demographics_output_csv)
             assert next(test_output_reader)['country_code'] == 'TEST1'
+
+    def test_scores_written(self):
+
+        with open(self.scores_filepath) as test_scores_output_csv:
+
+            test_output_reader = DictReader(test_scores_output_csv)
+            assert next(test_output_reader)['total'] == '1234'
 
     def test_authors_written(self):
 
