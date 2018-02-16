@@ -4,8 +4,8 @@ library(tidyverse)
 
 # load a mentions file
 
-mentions <- read_csv("../files_out/20180130_0810_mentions.csv")
-articles <- read_csv("../files_out/20180130_0810_master.csv")
+mentions <- read_csv("../files_out/20180215_0938_mentions.csv")
+articles <- read_csv("../files_out/20180215_0938_master.csv")
 
 # Basic plot of the sources in a bar chart
 
