@@ -139,6 +139,7 @@ class AltmetricLoader:
     def _load_scores(self, scores_data):
 
         scores = AltmetricScore()
+        scores.doi = self.__result.doi
         scores.total_score = scores_data["score"]
 
         scores.score_history = self._load_score_history(scores_data["score_history"])

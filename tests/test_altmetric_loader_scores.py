@@ -19,6 +19,10 @@ class TestAltmetricLoaderScores:
 
         mentionsJsonFile.close()
 
+    def test_doi_is_loaded_into_scores_object(self):
+
+        assert self.result.scores.doi == '10.1007/s13280-011-0222-9'
+
     def test_score_total_is_38_etc(self):
 
         assert self.result.scores.total_score == 38.358
