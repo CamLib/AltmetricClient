@@ -4,7 +4,7 @@ library(tidyverse)
 
 # load a subjects file
 
-subjects <- read_csv("../files_out/20180215_0938_subjects.csv")
+subjects <- read_csv("../files_out/20180220_0719_subjects.csv")
 
 # bar chart the altmetric subjects
 

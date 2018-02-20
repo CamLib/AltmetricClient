@@ -4,7 +4,7 @@ library(tidyverse)
 
 # load an articles master file
 
-articles <- read_csv("../files_out/20180215_0938_master.csv")
+articles <- read_csv("../files_out/20180220_0719_master.csv")
 
 # plots articles by publication date and total mentions
 

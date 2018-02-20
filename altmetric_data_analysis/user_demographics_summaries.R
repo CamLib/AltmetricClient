@@ -4,7 +4,7 @@ library(tidyverse)
 
 # load a user demographics file
 
-user_demographics <- read_csv("../files_out/20180215_0938_user_demographics.csv")
+user_demographics <- read_csv("../files_out/20180220_0719_user_demographics.csv")
 
 # filter by mendeley by_status - professor - then order by the most mentioned
 
