@@ -64,3 +64,12 @@ class TestAltmetricLoaderDemographicUsers:
                                           user_demographics.group_value == 'Psychology']
 
         assert mendeley_psychology_discipline[0].total == 13
+
+    def test_altmetric_poster_type_demographic_member_of_public_is_55(self):
+
+        altmetric_poster_type_public = [user_demographics for user_demographics in self.result.user_demographics
+                                        if user_demographics.source == 'altmetric'
+                                        and user_demographics.group_type == 'poster_types'
+                                        and user_demographics.group_value == 'member_of_the_public']
+
+        assert altmetric_poster_type_public[0].total == 55

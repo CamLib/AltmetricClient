@@ -28,10 +28,6 @@ class Altmetric:
         self.__type = None
         self.__uri = None
         self.__mendeley_url = None
-        self.__poster_type_members_of_public_count = None
-        self.__poster_type_researcher_count = None
-        self.__poster_type_practitioner_count = None
-        self.__poster_type_science_communicator_count = None
 
         self.__scores = None
 
@@ -199,38 +195,6 @@ class Altmetric:
     @mendeley_url.setter
     def mendeley_url(self, mendeley_url):
         self.__mendeley_url = mendeley_url
-        
-    @property
-    def poster_type_members_of_public_count(self):
-        return self.__poster_type_members_of_public_count
-    
-    @poster_type_members_of_public_count.setter
-    def poster_type_members_of_public_count(self, poster_type_members_of_public_count):
-        self.__poster_type_members_of_public_count = poster_type_members_of_public_count
-
-    @property
-    def poster_type_researcher_count(self):
-        return self.__poster_type_researcher_count
-
-    @poster_type_researcher_count.setter
-    def poster_type_researcher_count(self, poster_type_researcher_count):
-        self.__poster_type_researcher_count = poster_type_researcher_count
-
-    @property
-    def poster_type_practitioner_count(self):
-        return self.__poster_type_practitioner_count
-
-    @poster_type_practitioner_count.setter
-    def poster_type_practitioner_count(self, poster_type_practitioner_count):
-        self.__poster_type_practitioner_count = poster_type_practitioner_count
-
-    @property
-    def poster_type_science_communicator_count(self):
-        return self.__poster_type_science_communicator_count
-
-    @poster_type_science_communicator_count.setter
-    def poster_type_science_communicator_count(self, poster_type_science_communicator_count):
-        self.__poster_type_science_communicator_count = poster_type_science_communicator_count
 
     @property
     def scores(self):

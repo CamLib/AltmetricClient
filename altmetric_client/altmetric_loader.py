@@ -244,33 +244,14 @@ class AltmetricLoader:
 
     def _load_poster_types(self, poster_types_data):
 
-        self.__result.poster_type_members_of_public_count = 0
-        self.__result.poster_type_researcher_count = 0
-        self.__result.poster_type_practitioner_count = 0
-        self.__result.poster_type_science_communicator_count = 0
-
         for poster_type in poster_types_data:
 
-            if poster_type == 'member_of_the_public':
-
-                self.__result.poster_type_members_of_public_count = poster_types_data[poster_type]
-
-            elif poster_type == 'researcher':
-
-                self.__result.poster_type_researcher_count = poster_types_data[poster_type]
-
-            elif poster_type == 'practitioner':
-
-                self.__result.poster_type_practitioner_count = poster_types_data[poster_type]
-
-            elif poster_type == 'science_communicator':
-
-                self.__result.poster_type_science_communicator_count = poster_types_data[poster_type]
-
-            else:
-
-                print("Article with DOI {0} had an unexpected demographic poster_type of {1}"
-                          .format(self.__result.doi, poster_type))
+            altmetric_user_demographic = UserDemographics()
+            altmetric_user_demographic.source = 'altmetric'
+            altmetric_user_demographic.group_type = 'poster_types'
+            altmetric_user_demographic.group_value = poster_type
+            altmetric_user_demographic.total = poster_types_data[poster_type]
+            self.__result.add_user_demographics(altmetric_user_demographic)
 
     def _load_user_demographics(self, user_demographics_data):
 

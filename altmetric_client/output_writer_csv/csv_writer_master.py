@@ -35,8 +35,7 @@ class CSVWriterMaster(CSVWriterBase):
                       'journal_title', 'journal_volume', 'journal_issue', 'page_starts', 'page_ends',
                       'publisher', 'altmetric_journal_id', 'total_mentions',
                       'print_publication_date','first_seen_on_date', 'last_mentioned_date',
-                      'first_author', 'pdf_url', 'uri', 'mendeley_url', 'poster_count_members_of_public',
-                      'poster_count_researcher', 'poster_count_practitioner', 'poster_count_science_communicator']
+                      'first_author', 'pdf_url', 'uri', 'mendeley_url']
 
         try:
 
@@ -66,11 +65,7 @@ class CSVWriterMaster(CSVWriterBase):
                                    first_author=self.altmetric.first_author,
                                    pdf_url=self.altmetric.pdf_url,
                                    uri=self.altmetric.uri,
-                                   mendeley_url=self.altmetric.mendeley_url,
-                                   poster_count_members_of_public=self.altmetric.poster_type_members_of_public_count,
-                                   poster_count_researcher=self.altmetric.poster_type_researcher_count,
-                                   poster_count_practitioner=self.altmetric.poster_type_practitioner_count,
-                                   poster_count_science_communicator=self.altmetric.poster_type_science_communicator_count)
+                                   mendeley_url=self.altmetric.mendeley_url)
 
                 output_writer.writerow(output_dict)
 
