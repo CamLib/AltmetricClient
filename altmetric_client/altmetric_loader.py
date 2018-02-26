@@ -146,10 +146,19 @@ class AltmetricLoader:
 
         context_data = scores_data["context_for_score"]
 
-        scores.context_all = self._load_score_context(context_data["all"])
-        scores.context_similar_age_three_months = self._load_score_context(context_data["similar_age_3m"])
-        scores.context_this_journal = self._load_score_context(context_data["this_journal"])
-        scores.context_similar_age_this_journal_three_months = self._load_score_context(context_data["similar_age_this_journal_3m"])
+        if context_data is not None:
+
+            scores.context_all = self._load_score_context(context_data["all"])
+            scores.context_similar_age_three_months = self._load_score_context(context_data["similar_age_3m"])
+            scores.context_this_journal = self._load_score_context(context_data["this_journal"])
+            scores.context_similar_age_this_journal_three_months = self._load_score_context(context_data["similar_age_this_journal_3m"])
+
+        else:
+
+            scores.context_all = self._load_null_context()
+            scores.context_similar_age_three_months = self._load_null_context()
+            scores.context_this_journal = self._load_null_context()
+            scores.context_similar_age_this_journal_three_months = self._load_null_context()
 
         self.__result.scores = scores
 
@@ -182,6 +191,19 @@ class AltmetricLoader:
         context.percentile = context_data["percentile"]
 
         return context
+
+    def _load_null_context(self):
+
+        null_context = AltmetricScoreContext()
+        null_context.total_number_of_other_articles = 'na'
+        null_context.mean = 'na'
+        null_context.rank = 'na'
+        null_context.this_scored_higher_than_pct = 'na'
+        null_context.this_scored_higher_than = 'na'
+        null_context.percentile = 'na'
+        null_context.rank_type = 'na'
+
+        return null_context
 
     def _load_subjects(self, citation_data):
 
