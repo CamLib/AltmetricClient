@@ -25,6 +25,7 @@ class AltmetricClientFacade:
         self._input_file_name = input_file_name
         self._files_out_directory = files_out_directory
         self._output_files_root = output_files_root
+        self._error_dois = []
 
     def execute(self):
 
@@ -56,6 +57,7 @@ class AltmetricClientFacade:
                 print('An error occurred when retrieving DOI {0}/{1} - {2}'.format(total_retrieved, total_dois, doi))
                 print('The error was: '), sys.exc_info()[0]
                 error_count += 1
+                self._error_dois.append(doi)
 
         print('Retrieval of {0} DOIs completed with {1} errors'.format(total_dois, error_count))
 
@@ -65,5 +67,12 @@ class AltmetricClientFacade:
               .format(len(complete_author_list)))
 
         csv_writer.write_authors(complete_author_list)
+
+        if len(self._error_dois) > 0:
+
+            print('The following DOIs caused errors:')
+
+            for error_doi in self._error_dois:
+                print(error_doi)
 
         print('All done. Have a nice day.')

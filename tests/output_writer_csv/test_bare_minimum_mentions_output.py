@@ -20,7 +20,7 @@ class TestBareMinimumMentionsOutput:
         test_mentions_list = []
 
         test_mention_1 = Mention()
-        test_mention_1.related_article_doi = '/Test/DOI/1234'
+        test_mention_1.doi = '/Test/DOI/1234'
         test_mention_1.url = 'http://testurl1.com'
         test_mention_1.source = 'testsource1'
         test_mention_1.date_posted = '2016-03-31T11:00:00+00:00'
@@ -29,7 +29,7 @@ class TestBareMinimumMentionsOutput:
         test_mentions_list.append(test_mention_1)
 
         test_mention_2 = Mention()
-        test_mention_2.related_article_doi = '/Test/DOI/4321'
+        test_mention_2.doi = '/Test/DOI/4321'
         test_mention_2.url = 'http://testurl2.com'
         test_mention_2.source = 'testsource22'
         test_mention_2.date_posted = '2015-03-15T12:00:00+00:00'
@@ -64,7 +64,7 @@ class TestBareMinimumMentionsOutput:
         with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
 
             test_output_reader = DictReader(test_output_csv)
-            assert test_output_reader.fieldnames[0] == 'related_article_doi'
+            assert test_output_reader.fieldnames[0] == 'doi'
 
     def test_related_article_doi_added_to_mentions(self):
 
@@ -73,7 +73,7 @@ class TestBareMinimumMentionsOutput:
         with open('{0}{1}'.format(self._files_out_directory, self._test_file_name)) as test_output_csv:
             test_output_reader = DictReader(test_output_csv)
 
-            assert next(test_output_reader)['related_article_doi'] == '/Test/DOI/1234'
+            assert next(test_output_reader)['doi'] == '/Test/DOI/1234'
 
     def test_url_added_to_mentions(self):
 

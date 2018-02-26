@@ -1,5 +1,8 @@
 from altmetric_client.mention import Mention
 from altmetric_client.subject import Subject
+from altmetric_client.user_demographics import UserDemographics
+from altmetric_client.geo_demographics import GeoDemographics
+from altmetric_client.altmetric_score import AltmetricScore
 
 class Altmetric:
 
@@ -25,13 +28,13 @@ class Altmetric:
         self.__type = None
         self.__uri = None
         self.__mendeley_url = None
-        self.__poster_type_members_of_public_count = None
-        self.__poster_type_researcher_count = None
-        self.__poster_type_practitioner_count = None
-        self.__poster_type_science_communicator_count = None
+
+        self.__scores = None
 
         self.__mentions = []
         self.__subjects = []
+        self.__user_demographics = []
+        self.__geo_demographics = []
 
     @property
     def doi(self):
@@ -192,38 +195,14 @@ class Altmetric:
     @mendeley_url.setter
     def mendeley_url(self, mendeley_url):
         self.__mendeley_url = mendeley_url
-        
-    @property
-    def poster_type_members_of_public_count(self):
-        return self.__poster_type_members_of_public_count
-    
-    @poster_type_members_of_public_count.setter
-    def poster_type_members_of_public_count(self, poster_type_members_of_public_count):
-        self.__poster_type_members_of_public_count = poster_type_members_of_public_count
 
     @property
-    def poster_type_researcher_count(self):
-        return self.__poster_type_researcher_count
+    def scores(self):
+        return self.__scores
 
-    @poster_type_researcher_count.setter
-    def poster_type_researcher_count(self, poster_type_researcher_count):
-        self.__poster_type_researcher_count = poster_type_researcher_count
-
-    @property
-    def poster_type_practitioner_count(self):
-        return self.__poster_type_practitioner_count
-
-    @poster_type_practitioner_count.setter
-    def poster_type_practitioner_count(self, poster_type_practitioner_count):
-        self.__poster_type_practitioner_count = poster_type_practitioner_count
-
-    @property
-    def poster_type_science_communicator_count(self):
-        return self.__poster_type_science_communicator_count
-
-    @poster_type_science_communicator_count.setter
-    def poster_type_science_communicator_count(self, poster_type_science_communicator_count):
-        self.__poster_type_science_communicator_count = poster_type_science_communicator_count
+    @scores.setter
+    def scores(self, scores: AltmetricScore):
+        self.__scores = scores
 
     @property
     def mentions(self):
@@ -238,5 +217,19 @@ class Altmetric:
 
     def add_subject(self, subject: Subject):
         self.__subjects.append(subject)
+
+    @property
+    def user_demographics(self):
+        return self.__user_demographics
+
+    def add_user_demographics(self, user_demographics: UserDemographics):
+        self.__user_demographics.append(user_demographics)
+
+    @property
+    def geo_demographics(self):
+        return self.__geo_demographics
+
+    def add_geo_demographics(self, geo_demographics: GeoDemographics):
+        self.__geo_demographics.append(geo_demographics)
 
 

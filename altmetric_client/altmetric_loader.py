@@ -1,8 +1,13 @@
 from altmetric_client.altmetric import Altmetric
+from altmetric_client.altmetric_score import AltmetricScore
+from altmetric_client.altmetric_score_context import AltmetricScoreContext
+from altmetric_client.altmetric_score_history import AltmetricScoreHistory
 from altmetric_client.mention import Mention
 from altmetric_client.author_manager import AuthorManager
 from altmetric_client.author import Author
 from altmetric_client.subject import Subject
+from altmetric_client.user_demographics import UserDemographics
+from altmetric_client.geo_demographics import GeoDemographics
 
 import time
 
@@ -44,6 +49,8 @@ class AltmetricLoader:
         self.__result.total_mentions = data["counts"]["total"]["posts_count"]
 
         self._load_citation_data(data["citation"])
+
+        self._load_scores(data["altmetric_score"])
 
         self._load_demographics(data["demographics"])
 
@@ -129,6 +136,75 @@ class AltmetricLoader:
 
         self._load_subjects(citation_data)
 
+    def _load_scores(self, scores_data):
+
+        scores = AltmetricScore()
+        scores.doi = self.__result.doi
+        scores.total_score = scores_data["score"]
+
+        scores.score_history = self._load_score_history(scores_data["score_history"])
+
+        context_data = scores_data["context_for_score"]
+
+        if context_data is not None:
+
+            scores.context_all = self._load_score_context(context_data["all"])
+            scores.context_similar_age_three_months = self._load_score_context(context_data["similar_age_3m"])
+            scores.context_this_journal = self._load_score_context(context_data["this_journal"])
+            scores.context_similar_age_this_journal_three_months = self._load_score_context(context_data["similar_age_this_journal_3m"])
+
+        else:
+
+            scores.context_all = self._load_null_context()
+            scores.context_similar_age_three_months = self._load_null_context()
+            scores.context_this_journal = self._load_null_context()
+            scores.context_similar_age_this_journal_three_months = self._load_null_context()
+
+        self.__result.scores = scores
+
+    def _load_score_history(self, score_history_data):
+
+        score_history = AltmetricScoreHistory()
+        score_history.last_one_year = score_history_data["1y"]
+        score_history.last_six_months = score_history_data["6m"]
+        score_history.last_three_months = score_history_data["3m"]
+        score_history.last_one_month = score_history_data["1m"]
+        score_history.last_one_week = score_history_data["1w"]
+        score_history.last_six_days = score_history_data["6d"]
+        score_history.last_five_days = score_history_data["5d"]
+        score_history.last_four_days = score_history_data["4d"]
+        score_history.last_three_days = score_history_data["3d"]
+        score_history.last_two_days = score_history_data["2d"]
+        score_history.last_one_day = score_history_data["1d"]
+
+        return score_history
+
+    def _load_score_context(self, context_data):
+
+        context = AltmetricScoreContext()
+        context.total_number_of_other_articles = context_data["total_number_of_other_articles"]
+        context.mean = context_data["mean"]
+        context.rank = context_data["rank"]
+        context.this_scored_higher_than_pct = context_data["this_scored_higher_than_pct"]
+        context.this_scored_higher_than = context_data["this_scored_higher_than"]
+        context.rank_type = context_data["rank_type"]
+        context.percentile = context_data["percentile"]
+
+        return context
+
+    def _load_null_context(self):
+
+        null_context = AltmetricScoreContext()
+        null_context.total_number_of_other_articles = 'na'
+        null_context.mean = 'na'
+        null_context.rank = 'na'
+        null_context.this_scored_higher_than_pct = 'na'
+        null_context.this_scored_higher_than = 'na'
+        null_context.percentile = 'na'
+        null_context.rank_type = 'na'
+
+        return null_context
+
     def _load_subjects(self, citation_data):
 
         if 'subjects' in citation_data:
@@ -163,41 +239,117 @@ class AltmetricLoader:
 
     def _load_demographics(self, demographics_data):
 
-        self.__result.poster_type_members_of_public_count = 0
-        self.__result.poster_type_researcher_count = 0
-        self.__result.poster_type_practitioner_count = 0
-        self.__result.poster_type_science_communicator_count = 0
-
         if 'poster_types' not in demographics_data:
 
             print("Article with DOI {0} did not have poster types demographic data."
                   .format(self.__result.doi))
+        else:
+
+            self._load_poster_types(demographics_data['poster_types'])
+
+        if 'users' not in demographics_data:
+
+            print("Article with DOI {0} did not have user demographics data."
+                  .format(self.__result.doi))
+        else:
+
+            self._load_user_demographics(demographics_data['users'])
+
+        if 'geo' not in demographics_data:
+
+            print("Article with DOI {0} did not have geo demographics data."
+                  .format(self.__result.doi))
 
         else:
 
-            for poster_type in demographics_data['poster_types']:
+            self._load_geo_demographics(demographics_data['geo'])
 
-                if poster_type == 'member_of_the_public':
+    def _load_poster_types(self, poster_types_data):
 
-                    self.__result.poster_type_members_of_public_count = demographics_data['poster_types'][poster_type]
+        for poster_type in poster_types_data:
 
-                elif poster_type == 'researcher':
+            altmetric_user_demographic = UserDemographics()
+            altmetric_user_demographic.source = 'altmetric'
+            altmetric_user_demographic.group_type = 'poster_types'
+            altmetric_user_demographic.group_value = poster_type
+            altmetric_user_demographic.total = poster_types_data[poster_type]
+            self.__result.add_user_demographics(altmetric_user_demographic)
 
-                    self.__result.poster_type_researcher_count = demographics_data['poster_types'][poster_type]
+    def _load_user_demographics(self, user_demographics_data):
 
-                elif poster_type == 'practitioner':
+        if 'twitter' not in user_demographics_data:
+            print('Article with DOI {0} did not have user demographics data from Twitter.'.format(self.__result.doi))
+        else:
 
-                    self.__result.poster_type_practitioner_count = demographics_data['poster_types'][poster_type]
+            twitter_demographics = user_demographics_data['twitter']
 
-                elif poster_type == 'science_communicator':
+            for cohort in twitter_demographics['cohorts']:
 
-                    self.__result.poster_type_science_communicator_count = demographics_data['poster_types'][poster_type]
+                twitter_cohort_demographics = UserDemographics()
+                twitter_cohort_demographics.doi = self.__result.doi
+                twitter_cohort_demographics.source = 'twitter'
+                twitter_cohort_demographics.group_type = 'cohort'
+                twitter_cohort_demographics.group_value = cohort
+                twitter_cohort_demographics.total = twitter_demographics['cohorts'][cohort]
+                self.__result.add_user_demographics(twitter_cohort_demographics)
 
-                else:
+        if 'mendeley' not in user_demographics_data:
+            print('Article with DOI {0} did not have user demographics data from Mendeley.'.format(self.__result.doi))
+        else:
 
-                    print("Article with DOI {0} had an unexpected demographic poster_type of {1}"
-                          .format(self.__result.doi, poster_type))
+            mendeley_demographics = user_demographics_data['mendeley']
 
+            for mendeley_status_demographic in mendeley_demographics['by_status']:
+
+                mendeley_by_status_demographic = UserDemographics()
+                mendeley_by_status_demographic.doi = self.__result.doi
+                mendeley_by_status_demographic.source = 'mendeley'
+                mendeley_by_status_demographic.group_type = 'by_status'
+                mendeley_by_status_demographic.group_value = mendeley_status_demographic
+                mendeley_by_status_demographic.total = mendeley_demographics['by_status'][mendeley_status_demographic]
+                self.__result.add_user_demographics(mendeley_by_status_demographic)
+
+            for mendeley_discipline_demographic in mendeley_demographics['by_discipline']:
+
+                mendeley_by_discipline_demographic = UserDemographics()
+                mendeley_by_discipline_demographic.doi = self.__result.doi
+                mendeley_by_discipline_demographic.source = 'mendeley'
+                mendeley_by_discipline_demographic.group_type = 'by_discipline'
+                mendeley_by_discipline_demographic.group_value = mendeley_discipline_demographic
+                mendeley_by_discipline_demographic.total = mendeley_demographics['by_discipline'][mendeley_discipline_demographic]
+                self.__result.add_user_demographics(mendeley_by_discipline_demographic)
+
+    def _load_geo_demographics(self, geo_demographics_data):
+
+        if 'twitter' not in geo_demographics_data:
+            print('Article with DOI {0} did not have geo demographics data from Twitter.'.format(self.__result.doi))
+
+        else:
+
+            twitter_geo_demographics = geo_demographics_data['twitter']
+
+            for twitter_geo_demographic_data in twitter_geo_demographics:
+
+                twitter_geo_demographic = GeoDemographics()
+                twitter_geo_demographic.doi = self.__result.doi
+                twitter_geo_demographic.source = 'twitter'
+                twitter_geo_demographic.country_code = twitter_geo_demographic_data
+                twitter_geo_demographic.total = twitter_geo_demographics[twitter_geo_demographic_data]
+                self.__result.add_geo_demographics(twitter_geo_demographic)
+
+        if 'mendeley' not in geo_demographics_data:
+            print('Article with DOI {0} did not have geo demographics data from Mendeley.'.format(self.__result.doi))
+        else:
+            mendeley_geo_demographics = geo_demographics_data['mendeley']
+
+            for mendeley_geo_demographic_data in mendeley_geo_demographics:
+
+                mendeley_geo_demographic = GeoDemographics()
+                mendeley_geo_demographic.doi = self.__result.doi
+                mendeley_geo_demographic.source = 'mendeley'
+                mendeley_geo_demographic.country_code = mendeley_geo_demographic_data
+                mendeley_geo_demographic.total = mendeley_geo_demographics[mendeley_geo_demographic_data]
+                self.__result.add_geo_demographics(mendeley_geo_demographic)
 
     def _strip_breaks_and_spaces(self, broken_string):
 

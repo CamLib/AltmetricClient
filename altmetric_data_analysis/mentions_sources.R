@@ -4,8 +4,8 @@ library(tidyverse)
 
 # load a mentions file
 
-mentions <- read_csv("../files_out/20180118_0733_mentions.csv")
-articles <- read_csv("../files_out/20180118_0733_master.csv")
+mentions <- read_csv("../files_out/20180220_0719_mentions.csv")
+articles <- read_csv("../files_out/20180220_0719_master.csv")
 
 # Basic plot of the sources in a bar chart
 
@@ -35,9 +35,10 @@ filter(mentions, related_article_doi == '10.1136/bmj.g3725' & source != 'twitter
   facet_wrap(~ source)
 
 # Join the two datasets.
+# Refactored to name the joining variable 'doi' across the join
 
 articles_with_mentions <- articles %>% 
-  left_join(mentions, by = c("doi" = "related_article_doi"))
+  left_join(mentions)
 
 articles_with_mentions %>% View()
 

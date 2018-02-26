@@ -4,7 +4,7 @@ library(tidyverse)
 
 # load an articles master file
 
-articles <- read_csv("../files_out/20180118_0733_master.csv")
+articles <- read_csv("../files_out/20180220_0719_master.csv")
 
 # Orders articles by total_mentions descending
 
@@ -28,4 +28,9 @@ summarise(articles, IQR(total_mentions))
 
 filter(articles, total_mentions == 10) %>% 
   arrange(desc(total_mentions)) %>% 
+  View()
+
+# Orders articles by count of member of public posters
+
+arrange(articles, desc(poster_count_members_of_public)) %>%
   View()

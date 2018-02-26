@@ -26,7 +26,7 @@ class CSVWriterMention(CSVWriterBase):
 
         write_mode = self._get_write_mode(output_file_path)
 
-        fieldnames = ['related_article_doi', 'url', 'source', 'date_posted', 'author_id']
+        fieldnames = ['doi', 'url', 'source', 'date_posted', 'author_id']
 
         try:
 
@@ -39,7 +39,7 @@ class CSVWriterMention(CSVWriterBase):
 
                 for mention in self.mentions_list:
 
-                    output_dict = dict(related_article_doi=mention.related_article_doi,
+                    output_dict = dict(doi=mention.doi,
                                        url=mention.url,
                                        source=mention.source,
                                        date_posted=mention.date_posted,
