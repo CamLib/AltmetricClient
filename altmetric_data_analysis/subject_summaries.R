@@ -6,9 +6,11 @@
 
 subjects <- read_csv(str_c(data_files_path, "_subjects.csv"))
 
+subjects %>% View()
+
 # bar chart the altmetric subjects
 
-(altmetric_subject_totals <- filter(subjects, subject_scheme == 'altmetric') %>%
+(altmetric_subject_totals <- filter(subjects, subject_scheme == 'era') %>%
     group_by(subject_name) %>%
     summarise(total = n()) %>%
     arrange(desc(total)))

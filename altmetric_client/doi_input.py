@@ -36,9 +36,9 @@ class DOIInputFileLoader:
 
             print("Could not find the input file at the location: {0}".format(self.input_file_path))
 
-        except:
+        except Exception as ex:
 
             print("The input file was found OK, but something weird happened when loading it.")
-            print('The error was: '), sys.exc_info()[0]
+            print('The error was: {0}'.format(ex))
 
         return doi_list
