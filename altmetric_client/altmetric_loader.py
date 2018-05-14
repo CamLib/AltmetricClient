@@ -62,7 +62,14 @@ class AltmetricLoader:
 
         self.__result.article_title = self._strip_breaks_and_spaces(citation_data["title"])
         self.__result.doi = str(citation_data['doi'])
-        self.__result.journal_title = citation_data["journal"]
+
+        if 'journal' not in citation_data:
+
+            self.__result.journal_title = 'NA'
+
+        else:
+
+            self.__result.journal_title = citation_data["journal"]
 
         if 'altmetric_jid' not in citation_data:
 
@@ -76,6 +83,10 @@ class AltmetricLoader:
         self.__result.first_seen_on_date = citation_data["first_seen_on"]
 
         if 'authors' not in citation_data:
+
+            self.__result.first_author = 'NA'
+
+        elif len(str(citation_data["authors"][0]).strip()) == 0:
 
             self.__result.first_author = 'NA'
 
