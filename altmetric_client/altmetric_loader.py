@@ -79,14 +79,29 @@ class AltmetricLoader:
 
             self.__result.altmetric_journal_id = citation_data["altmetric_jid"]
 
-        self.__result.print_publication_date = citation_data["pubdate"]
-        self.__result.first_seen_on_date = citation_data["first_seen_on"]
+        if 'pubdate' not in citation_data:
+
+            self.__result.print_publication_date = 'NA'
+
+        else:
+
+            self.__result.print_publication_date = citation_data["pubdate"]
+
+        if 'first_seen_on' not in citation_data:
+
+            self.__result.first_seen_on_date = 'NA'
+
+        else:
+
+            self.__result.first_seen_on_date = citation_data["first_seen_on"]
 
         if 'authors' not in citation_data:
 
             self.__result.first_author = 'NA'
 
-        elif len(str(citation_data["authors"][0]).strip()) == 0:
+        # sometimes the first author slot can be empty but there's data in the second slot...
+
+        elif len(citation_data["authors"]) == 1 and len(str(citation_data["authors"][0]).strip()) == 0:
 
             self.__result.first_author = 'NA'
 
