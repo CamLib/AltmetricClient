@@ -62,7 +62,14 @@ class AltmetricLoader:
 
         self.__result.article_title = self._strip_breaks_and_spaces(citation_data["title"])
         self.__result.doi = str(citation_data['doi'])
-        self.__result.journal_title = citation_data["journal"]
+
+        if 'journal' not in citation_data:
+
+            self.__result.journal_title = 'NA'
+
+        else:
+
+            self.__result.journal_title = citation_data["journal"]
 
         if 'altmetric_jid' not in citation_data:
 
@@ -72,10 +79,29 @@ class AltmetricLoader:
 
             self.__result.altmetric_journal_id = citation_data["altmetric_jid"]
 
-        self.__result.print_publication_date = citation_data["pubdate"]
-        self.__result.first_seen_on_date = citation_data["first_seen_on"]
+        if 'pubdate' not in citation_data:
+
+            self.__result.print_publication_date = 'NA'
+
+        else:
+
+            self.__result.print_publication_date = citation_data["pubdate"]
+
+        if 'first_seen_on' not in citation_data:
+
+            self.__result.first_seen_on_date = 'NA'
+
+        else:
+
+            self.__result.first_seen_on_date = citation_data["first_seen_on"]
 
         if 'authors' not in citation_data:
+
+            self.__result.first_author = 'NA'
+
+        # sometimes the first author slot can be empty but there's data in the second slot...
+
+        elif len(citation_data["authors"]) == 1 and len(str(citation_data["authors"][0]).strip()) == 0:
 
             self.__result.first_author = 'NA'
 

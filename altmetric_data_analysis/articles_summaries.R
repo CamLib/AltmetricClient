@@ -1,10 +1,10 @@
-# install.packages("tidyverse")
-
-library(tidyverse)
+# run the commands in the set_global_variables.R script
+# to load the required packages and set the file path to
+# the set of data files you want to work with.
 
 # load an articles master file
 
-articles <- read_csv("../files_out/20180220_0719_master.csv")
+articles <- read_csv(str_c(data_files_path, '_master.csv'))
 
 # Orders articles by total_mentions descending
 
