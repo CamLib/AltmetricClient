@@ -34,3 +34,10 @@ filter(articles, total_mentions == 10) %>%
 
 arrange(articles, desc(poster_count_members_of_public)) %>%
   View()
+
+ggplot(data = articles) + 
+  geom_point(mapping = aes(x = print_publication_date, y = altmetric_score))
+
+group_by(articles, type) %>%
+  summarise(total = n()) %>%
+  View()
