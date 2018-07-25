@@ -1,0 +1,81 @@
+---
+title: "Altmetric Subjects"
+date: 2018-07-25
+output: 
+  html_notebook: default
+  github_document: default
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+articles <- read_csv('../files_out/20180411_1510_master.csv')
+subjects <- read_csv('../files_out/20180411_1510_subjects.csv')
+
+```
+
+The Altmetric Subjects dataset contains the academic subject data for the articles in the Articles master set. The subjects data can be joined to the articles in the master set using the doi as the primary identifier. The below shows the simple plot of altmetric_score by publication_date for the test article set, but this time filtered by the three Scopus subjects: *Health Sciences*, *Social Sciences* and *Medicine*.
+
+```{r}
+
+articles_with_subjects <- left_join(articles, subjects)
+
+filtered_articles <- filter(
+  articles_with_subjects,
+  subject_scheme == 'scopus',
+  subject_name == 'Health Sciences' | 
+    subject_name == 'Social Sciences' | 
+    subject_name == 'Medicine'
+)
+
+ggplot(data = filtered_articles) + 
+  geom_point(mapping = aes(
+    x = print_publication_date, 
+    y = altmetric_score,
+    color = subject_name
+    ))
+
+```
+
+## Subjects Data Dictionary
+
+### doi
+
+**Data type: character**
+
+The primary identifier of the article the subject in this row belongs to. Used to join the subject data back to the articles in the master dataset.
+
+### subject_scheme
+
+**Data type: character**
+
+Altmetric categorise articles using a variety of different subject schemes, including their own one, which is listed as "altmetric" in these data sets. These schemes can be shown by running the code chunk below.
+
+```{r Groups subjects by scheme}
+
+summarise(
+  group_by(
+    subjects, 
+    subject_scheme
+    ), 
+  total = n()
+  )
+
+```
+
+### subject_name
+
+The name of the specific subject. Different schemes name the same (or similar) subjects differently, of course. Here's our example set, filtered by Scopus subjects, then grouped by subject_name and arranged in descending order (to show what the most common subjects are):
+
+```{r Groups Scopus subjects by subject_name}
+
+arrange(
+  summarise(
+    group_by(
+      filter(subjects, subject_scheme == 'scopus'),
+      subject_name),
+    total = n()),
+  desc(total)
+)
+
+```
+

@@ -14,14 +14,18 @@ articles <- read_csv('../files_out/20180411_1510_master.csv')
 
 # Article data
 
-The *article* is the master Altmetric entity, and contains all the basic information about title, publication date, the first author etc, as well as summaries, such as the numbers of mentions, the altmetric scores and so on.
+The *article* is the master Altmetric entity, and contains all the basic information about title, publication date, the first author etc, as well as summaries, such as the numbers of mentions, the altmetric scores and so on. 
+
+Most of the fun to be had with article data is achieved by joining it to other datasets, but how to do so and what can be achieved are described in the notebooks for those datasets. See the Notebook_Subjects.rmd for an example.
+
 
 ```{r Plot of Altmetric scores over time}
 ggplot(data = articles) + 
-  geom_point(mapping = aes(x = print_publication_date, y = altmetric_score))
+  geom_point(mapping = aes(
+    x = print_publication_date, 
+    y = altmetric_score
+    ))
 ```
-
-Most of the fun to be had with article data is achieved by joining it to other datasets, but how to do so and what can be achieved are described in the notebooks for those datasets.
 
 ## Article data dictionary
 
@@ -47,19 +51,30 @@ arrange(select(articles,
 
 ### article title
 
+**Data type: character**
+
 The (often very long - go figure) title of the article.
 
 ### doi (Digital Object Identifier)
+
+**Data type: character**
 
 In the current version of the Altmetric client the DOI is the primary identifier, and is the method used to retrieve Altmetric data from the API. Very nearly all joins between datasets are achieved using the doi field (the exception being the join between mentions and authors).
 
 ### type
 
+**Data type: character**
+
 This is a category determined by Altmetric themselves, and appears to always be 'article'.
 
 ```{r Grouping by type, echo=TRUE}
 
-  summarise(group_by(articles, type), total = n())
+  summarise(
+    group_by(
+      articles, 
+      type), 
+    total = n()
+    )
 
 ```
 
