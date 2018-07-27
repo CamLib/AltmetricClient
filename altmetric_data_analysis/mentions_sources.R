@@ -7,6 +7,16 @@
 mentions <- read_csv(str_c(data_files_path, "_mentions.csv"))
 articles <- read_csv(str_c(data_files_path, "_master.csv"))
 
+# What's the most mentioned article?
+
+arrange(
+  summarise(
+    group_by(mentions, doi),
+    total= n()
+  ),
+  desc(total)
+)
+
 # Basic plot of the sources in a bar chart
 
 ggplot(data = mentions) +

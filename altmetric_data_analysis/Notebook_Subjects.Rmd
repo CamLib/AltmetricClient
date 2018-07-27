@@ -15,7 +15,7 @@ subjects <- read_csv('../files_out/20180411_1510_subjects.csv')
 
 The Altmetric Subjects dataset contains the academic subject data for the articles in the Articles master set. The subjects data can be joined to the articles in the master set using the doi as the primary identifier. The below shows the simple plot of altmetric_score by publication_date for the test article set, but this time filtered by the three Scopus subjects: *Health Sciences*, *Social Sciences* and *Medicine*.
 
-```{r}
+```{r Plots publication dates and scores of articles filtered by subject}
 
 articles_with_subjects <- left_join(articles, subjects)
 
@@ -63,6 +63,8 @@ summarise(
 ```
 
 ### subject_name
+
+**Data type: character**
 
 The name of the specific subject. Different schemes name the same (or similar) subjects differently, of course. Here's our example set, filtered by Scopus subjects, then grouped by subject_name and arranged in descending order (to show what the most common subjects are):
 
