@@ -73,4 +73,16 @@ ggplot(data = followers_and_news) +
   geom_point(mapping = aes(x = total_followers, y = n))
 
 
+arrange(
+  summarise(
+    group_by(
+      filter(mentions_with_authors, source == "policy"),
+      author_image_url
+    ),
+    total = n()
+  ),
+  desc(total)
+) %>% write.csv("../files_out/policy_author_urls.csv")
+
+
 

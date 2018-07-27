@@ -1,0 +1,110 @@
+---
+title: "Altmetric Mentions"
+date: 2018-07-26
+output: 
+  html_notebook: default
+  github_document: default
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+
+mentions <- read_csv('../files_out/20180411_1510_mentions.csv')
+articles <- read_csv('../files_out/20180411_1510_master.csv')
+authors <- read_csv('../files_out/20180411_1510_authors.csv')
+
+articles_with_mentions <- left_join(articles, mentions)
+articles_with_mentions_and_authors <- left_join(articles_with_mentions, authors)
+
+```
+
+A Mention (sometimes also called a *post* in Altmetric parlance) is a piece of content in which a specific article is mentioned. Collecting these mentions is pretty much the core piece of value that Altmetric add. 
+
+As ever, the most fun with Mentions can be had by joining them to the master Articles dataset. However, the Altmetric client also extracts Authors information from each Mention and adds it to a third dataset (see the Authors notebook for more about this set).
+
+```{r Shows the journals that are most mentioned in news articles}
+
+arrange(
+  summarise(
+    group_by(
+      filter(articles_with_mentions, 
+             source == "news"),
+      journal_title
+    ),
+    total = n()
+  ),
+  desc(total)
+)
+
+
+```
+
+## Mentions Data Dictionary
+
+The following fields are included in the Mentions dataset
+
+### author_id
+
+**Data type: character**
+
+Used to join Mentions to the Authors dataset. Author information is extracted for each Mention and added to a separate set, which enables analysis of the engagement particular authors have with the Articles in the master dataset. For example, which papers have been mentioned by the Twitter users with the highest numbers of followers?
+
+```{r Articles ordered by the total number of followers of those that tweeted}
+
+arrange(
+  summarise(
+    group_by(filter(articles_with_mentions_and_authors, source == "twitter"),
+    article_title),
+    total_followers = sum(author_follower_count)
+  ),
+  desc(total_followers)
+)
+
+```
+
+The above depends upon counting two tweets about one article by a twitter user with n followers as being tweeted at 2n followers. Given that not all followers of a twitter user see all the tweets that user posts, this seems a reasonable assumption. 
+
+### date_posted
+
+**Data type: POSIX Calendar Time**
+
+The date upon which the Mention was posted. This is incredibly useful for trending the timeline of the 'buzz' around a specific Article (in the case below, the most mentioned one in the test set - 10.1920/bn.ifs.2017.bn0211).
+
+```{r Trend of the buzz around a specific article}
+
+article_mentions <- filter(mentions, doi == "10.1920/bn.ifs.2017.bn0211")
+
+ggplot(data = article_mentions, mapping = aes(x = date_posted)) +
+  geom_freqpoly(binwidth = 86400)
+
+```
+
+### doi
+
+**Data type: character**
+
+The key used to link a Mention back to the Article it mentioned in the master Articles set.
+
+### source
+
+**Data type: character**
+
+The source of the Mention. These can be charted using the query below (Twitter usually swamps all the others at time of writing). 
+
+```{r Charts a count of mentions by source}
+
+ggplot(data = mentions) +
+  geom_bar(mapping = aes(x = source)) +
+  coord_flip()
+
+```
+
+
+### url
+
+**Data type: character**
+
+The URL of the Mention (i.e. the place on the internet that Altmetric found it).
+
+
+
