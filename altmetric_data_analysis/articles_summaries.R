@@ -41,3 +41,20 @@ ggplot(data = articles) +
 group_by(articles, type) %>%
   summarise(total = n()) %>%
   View()
+
+
+journals <- arrange(
+  summarise(
+    group_by(articles,
+             journal_title,
+             altmetric_journal_id
+    ),
+    total_articles = n()
+  ),
+  desc(total_articles)
+)
+
+select(
+filter(articles, journal_title == '276'),
+doi,
+article_title)

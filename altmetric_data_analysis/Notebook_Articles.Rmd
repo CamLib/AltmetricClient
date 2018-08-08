@@ -35,9 +35,33 @@ Articles have the following fields:
 
 An article identifier used internally by Altmetric themselves, but included here in case there are reasons to contact Altmetric about anything that looks odd.
 
+### altmetric_journal_id
+
+**Data type: character**
+
+A unique id for the journal assigned by altmetric. For clarity it is better to include journal_title in a grouping statement, as sometimes the journals returned haven't been assigned a corresponding altmetric_journal_id (e.g. for DOI 10.18408/ahuri-5308301 in our test set).
+
+```{r Grouping by journal_title and altmetric_journal_id}
+
+arrange(
+  summarise(
+    group_by(articles,
+             journal_title,
+             altmetric_journal_id
+    ),
+    total_articles = n()
+  ),
+  desc(total_articles)
+)
+
+```
+
+
 ### altmetric_score
 
-The score altmetric gives to articles depending upon the amount of attention they have received. This is [described in more detail by Altmetric themselves](https://help.altmetric.com/support/solutions/articles/6000059309-about-altmetric-and-the-altmetric-attention-score).
+**Data type: numeric**
+
+The score altmetric gives to articles depending upon the amount of attention they have received. This is [described in more detail by Altmetric themselves](https://help.altmetric.com/support/solutions/articles/6000059309-about-altmetric-and-the-altmetric-attention-score). The Altmetric Client also outputs a much more detailed scores dataset which is covered by the Notebook_Scores.Rmd file. 
 
 ```{r Arranging articles by Altmetric score}
 
@@ -49,7 +73,7 @@ arrange(select(articles,
 
 ```
 
-### article title
+### article_title
 
 **Data type: character**
 
@@ -60,6 +84,96 @@ The (often very long - go figure) title of the article.
 **Data type: character**
 
 In the current version of the Altmetric client the DOI is the primary identifier, and is the method used to retrieve Altmetric data from the API. Very nearly all joins between datasets are achieved using the doi field (the exception being the join between mentions and authors).
+
+### journal_title
+
+**Data type: character**
+
+The title of the journal. Grouping by this field enables finding out which is the most commonly journal in your overall dataset.
+
+```{r Find the most commonly-occuring journals}
+
+arrange(
+  summarise(
+    group_by(articles,
+             journal_title
+    ),
+    total_articles = n()
+  ),
+  desc(total_articles)
+)
+
+```
+
+### journal_volume
+
+**Data type: character**
+
+The volume of the journal that the article is in (if known - this is quite patchy information).
+
+### journal_issue
+
+**Data type: character**
+
+The issue of the journal that the article is in (again, often unrecorded).
+
+### page_starts
+
+**Data type: character**
+
+The page the article starts on (if known, again patchy).
+
+### page_ends
+
+**Data type: character**
+
+The page the article ends
+
+### print_publication_date
+
+**Data type: POSIX Calendar Time** 
+
+The best attempt at establishing the date an article was published *in print*. This is obviously getting less and less relevant by the minute, as more and more articles are published online first. This becomes evident when you run queries to establish the length of time *after* publication before the first mention, and find hundreds of instances where the article was mentioned before it was published. See our [analysis of the impact of Open Access on policy] (https://github.com/CamLib/OAPolicyDataAnalysis) for some examples of this.
+
+
+### publisher
+
+**Data type: character**
+
+The publisher of the article. Like journal_title, this enables grouping and counts of publisher popularity in the set. Unlike journal_title, however, this information is often unknown.
+
+```{r Find the most commonly-occurring publishers}
+
+arrange(
+  summarise(
+    group_by(articles,
+             publisher
+    ),
+    total_articles = n()
+  ),
+  desc(total_articles)
+)
+
+```
+### total_mentions
+
+**Data type: int**
+
+Summarises the total number of mentions. Altmetric themselves provide this summary field via their, though the same can be achieved by joining the articles to the mentions dataset (see Notebook_Mentions.Rmd). The latter approach further enables filtering / grouping by mention source (e.g. 'most mentioned on Twitter, in the news, in policy documentation' etc).
+
+```{r Most mentioned articles}
+
+arrange(
+  select(
+    articles,
+    article_title,
+    total_mentions
+  ),
+  desc(total_mentions)
+)
+
+```
+
 
 ### type
 
@@ -77,4 +191,3 @@ This is a category determined by Altmetric themselves, and appears to always be 
     )
 
 ```
-
