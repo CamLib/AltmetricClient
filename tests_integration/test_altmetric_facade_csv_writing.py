@@ -163,7 +163,7 @@ class TestAltmetricFacadeCSVWriting:
 
                 if row['doi'] == '10.1001/jama.2013.950' and row['demographic_source'] == 'mendeley' and row['demographic_group_type'] == 'by_status' and row['demographic_group_value'] == 'Other':
 
-                    assert row['demographic_total'] == '5'
+                    assert row['demographic_total'] == '6'
 
     def test_geo_demographics_contains_twitter_canada_count_of_3(self):
 

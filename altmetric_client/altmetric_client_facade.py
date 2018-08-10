@@ -7,6 +7,7 @@ from altmetric_client.altmetric_request import AltmetricRequest
 from altmetric_client.author_manager import AuthorManager
 from altmetric_client.altmetric_loader import AltmetricLoader
 from altmetric_client.doi_input import DOIInputFileLoader
+from altmetric_client.json_file_manager import JSONFileManager
 
 class AltmetricClientFacade:
 
@@ -15,7 +16,8 @@ class AltmetricClientFacade:
                  files_in_directory:str=None,
                  input_file_name:str=None,
                  files_out_directory:str=None,
-                 output_files_root:str=None):
+                 output_files_root:str=None,
+                 behaviour:str=None):
 
         # this is where to set a behaviour (e.g. 'write csv', 'write something else', 'generate list'
         # at some point later on when the AltmetricClient supports multiple behaviours
@@ -25,6 +27,7 @@ class AltmetricClientFacade:
         self._input_file_name = input_file_name
         self._files_out_directory = files_out_directory
         self._output_files_root = output_files_root
+        self._behaviour = behaviour
         self._error_dois = []
 
     def execute(self):
@@ -39,6 +42,7 @@ class AltmetricClientFacade:
         author_manager = AuthorManager()
         altmetric_loader = AltmetricLoader()
         altmetric_loader.author_manager = author_manager
+        json_file_manager = JSONFileManager(self._files_out_directory)
         total_retrieved = 1
         error_count = 0
 
@@ -47,9 +51,24 @@ class AltmetricClientFacade:
             altmetric_request.doi_to_request = doi
 
             try:
-                altmetric_data = altmetric_request.request()
-                altmetric = altmetric_loader.parse_result(altmetric_data)
-                csv_writer.write(altmetric)
+
+                if self._behaviour == "load":
+
+                    altmetric_data = json_file_manager.load(self._files_in_directory, doi)
+
+                else:
+
+                    altmetric_data = altmetric_request.request()
+
+                if self._behaviour == 'dump':
+
+                    json_file_manager.dump(altmetric_data, doi)
+
+                else:
+
+                    altmetric = altmetric_loader.parse_result(altmetric_data)
+                    csv_writer.write(altmetric)
+
                 print('{0}/{1} DOIs retrieved'.format(total_retrieved, total_dois))
                 total_retrieved += 1
 
